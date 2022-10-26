@@ -7,81 +7,96 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Label;
-import javafx.scene.effect.Glow;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import entities.*;
+import graphics.Sprite;
 
+import java.util.ArrayList;
+import java.util.List;
 
 public class Game extends Application {
 
+    public static final int WIDTH = 20;
+    public static final int HEIGHT = 15;
+
+    private GraphicsContext gc;
+    private Canvas canvas;
+    private List<Entity> entities = new ArrayList<>();
+    private List<Entity> stillObjects = new ArrayList<>();
+
+
     public static void main(String[] args) {
-        launch(args);
+        Application.launch(Game.class);
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
+        // Tao Canvas
+        canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
+        gc = canvas.getGraphicsContext2D();
+
+        // Tao root container
         Group root = new Group();
-        Scene scene = new Scene(root, Color.BLACK );
-        Text text = new Text();
-        text.setText("Hello Worlds");
-        text.setX(55);
-        text.setY(55);
-        text.setFont( Font.font("Aria" , 50) );
-        text.setFill(Color.MIDNIGHTBLUE);
+        root.getChildren().add(canvas);
 
-        // Effect
-        Glow glow = new Glow();
-        glow.setLevel(0.5);
+        // Tao scene
+        Scene scene = new Scene(root);
 
-        Image background = new Image("galaxy.jpg");
-        ImageView backImage = new ImageView(background);
-        backImage.setX(50);
-        backImage.setY(50);
-        backImage.setFitHeight(100);
-        backImage.setPreserveRatio(true);
-        backImage.setEffect(glow);
-
-        Circle circle = new Circle();
-        circle.setCenterX(200);
-        circle.setCenterY(200);
-        circle.setRadius(50);
-        circle.setFill( Color.CRIMSON );
-
-        EventHandler<MouseEvent> filterEvent = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                System.out.println("HE ok easy");
-                circle.setFill(Color.YELLOW);
-            }
-        };
-
-        EventHandler<MouseEvent> handlerEvent = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                System.out.println("HE ok easy");
-                circle.setFill(Color.RED);
-                System.out.println("TESTER");
-            }
-        };
-
-
-        circle.addEventFilter(MouseEvent.MOUSE_CLICKED , filterEvent);
-        circle.addEventHandler(MouseEvent.MOUSE_CLICKED , handlerEvent );
-
-        root.getChildren().add(circle);
-        root.getChildren().add(backImage);
-        root.getChildren().add(text);
-        stage.getIcons().add(background);
-        stage.setTitle("BomberMan");
+        // Them scene vao stage
         stage.setScene(scene);
         stage.show();
+
+        AnimationTimer timer = new AnimationTimer() {
+            @Override
+            public void handle(long l) {
+                render();
+                update();
+            }
+        };
+        timer.start();
+
+        createMap();
+
+        Bomber bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
+        entities.add(bomberman);
+
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                switch (event.getCode()) {
+                    case UP:    bomberman.goUp(); break;
+                    case DOWN:  bomberman.goDown(); break;
+                    case LEFT:  bomberman.goLeft(); break;
+                    case RIGHT: bomberman.goRight(); break;
+                    case Q: System.exit(1); break;
+                }
+            }
+        });
+    }
+
+    public void createMap() {
+        for (int i = 0; i < WIDTH; i++) {
+            for (int j = 0; j < HEIGHT; j++) {
+                Entity object;
+                object = new Grass(i, j, Sprite.grass.getFxImage());
+
+                if (j == 0 || j == HEIGHT - 1 || i == 0 || i == WIDTH - 1) {
+                    object = new Wall(i, j, Sprite.wall.getFxImage());
+                }
+
+                stillObjects.add(object);
+            }
+        }
+    }
+
+    public void update() {
+        entities.forEach(Entity::update);
+    }
+
+    public void render() {
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        stillObjects.forEach(g -> g.render(gc));
+        entities.forEach(g -> g.render(gc));
     }
 }
