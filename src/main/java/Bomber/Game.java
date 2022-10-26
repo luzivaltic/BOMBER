@@ -68,6 +68,7 @@ public class Game extends Application {
             public void handle(MouseEvent mouseEvent) {
                 System.out.println("HE ok easy");
                 circle.setFill(Color.RED);
+                System.out.println("TESTER");
             }
         };
 
