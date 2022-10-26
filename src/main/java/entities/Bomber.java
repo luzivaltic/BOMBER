@@ -1,6 +1,5 @@
 package entities;
 
-import Bomber.Game;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -21,9 +20,6 @@ public class Bomber extends Entity {
 
     @Override
     public void update() {
-        if( moving ){
-            x += DIR_X[dir] * STEP_SIZE;
-            y += DIR_Y[dir] * STEP_SIZE;
-        }
+
     }
 }

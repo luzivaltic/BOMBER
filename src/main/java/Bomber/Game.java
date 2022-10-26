@@ -12,13 +12,15 @@ import javafx.stage.Stage;
 import entities.*;
 import graphics.Sprite;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Game extends Application {
-
-    public static final int WIDTH = 20;
-    public static final int HEIGHT = 15;
+    public static final int WIDTH = 31;
+    public static final int HEIGHT = 13;
 
     public static final int FPS = 60;
     private GraphicsContext gc;
@@ -55,8 +57,34 @@ public class Game extends Application {
         createMap();
         Bomber bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
         entities.add(bomberman);
+        buildEntities();
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void buildEntities() throws FileNotFoundException {
+        File file = new File("src/main/resources/level1.txt");
+        Scanner scanner = new Scanner(file);
+
+        for (int i = 0; i < HEIGHT; i++) {
+            String readMap = scanner.nextLine();
+
+            for (int j = 0; j < WIDTH; j++) {
+                Entity object;
+                object = new Grass(j, i, Sprite.grass.getFxImage());
+
+                switch (readMap.charAt(j)) {
+                    case 'p': object = new Bomber(j, i, Sprite.player_right.getFxImage()); break;
+                    case '1': object = new Monster(j, i, Sprite.balloom_right1.getFxImage()); break;
+                    case '2': object = new Monster(j, i, Sprite.oneal_right1.getFxImage()); break;
+                    case '#': object = new Wall(j, i, Sprite.wall.getFxImage()); break;
+                    case '*': object = new Brick(j, i, Sprite.brick.getFxImage()); break;
+                    case 'x': object = new Portal(j, i, Sprite.portal.getFxImage()); break;
+                }
+
+                entities.add(object);
+            }
+        }
     }
 
     public void createMap() {
