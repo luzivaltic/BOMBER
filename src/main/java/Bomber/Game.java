@@ -12,13 +12,15 @@ import javafx.stage.Stage;
 import entities.*;
 import graphics.Sprite;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Game extends Application {
-
-    public static final int WIDTH = 20;
-    public static final int HEIGHT = 15;
+    public static final int WIDTH = 31;
+    public static final int HEIGHT = 13;
 
     private GraphicsContext gc;
     private Canvas canvas;
@@ -31,7 +33,7 @@ public class Game extends Application {
     }
 
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws Exception {
         // Tao Canvas
         canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
         gc = canvas.getGraphicsContext2D();
@@ -57,6 +59,7 @@ public class Game extends Application {
         timer.start();
 
         createMap();
+        buildEntities();
 
         Bomber bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
         entities.add(bomberman);
@@ -65,14 +68,35 @@ public class Game extends Application {
             @Override
             public void handle(KeyEvent event) {
                 switch (event.getCode()) {
-                    case UP:    bomberman.goUp(); break;
-                    case DOWN:  bomberman.goDown(); break;
-                    case LEFT:  bomberman.goLeft(); break;
-                    case RIGHT: bomberman.goRight(); break;
                     case Q: System.exit(1); break;
                 }
             }
         });
+    }
+
+    public void buildEntities() throws FileNotFoundException {
+        File file = new File("src/main/resources/level1.txt");
+        Scanner scanner = new Scanner(file);
+
+        for (int i = 0; i < HEIGHT; i++) {
+            String readMap = scanner.nextLine();
+
+            for (int j = 0; j < WIDTH; j++) {
+                Entity object;
+                object = new Grass(j, i, Sprite.grass.getFxImage());
+
+                switch (readMap.charAt(j)) {
+                    case 'p': object = new Bomber(j, i, Sprite.player_right.getFxImage()); break;
+                    case '1': object = new Monster(j, i, Sprite.balloom_right1.getFxImage()); break;
+                    case '2': object = new Monster(j, i, Sprite.oneal_right1.getFxImage()); break;
+                    case '#': object = new Wall(j, i, Sprite.wall.getFxImage()); break;
+                    case '*': object = new Brick(j, i, Sprite.brick.getFxImage()); break;
+                    case 'x': object = new Portal(j, i, Sprite.portal.getFxImage()); break;
+                }
+
+                entities.add(object);
+            }
+        }
     }
 
     public void createMap() {
