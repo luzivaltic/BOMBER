@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import entities.*;
 import graphics.Sprite;
@@ -21,13 +22,14 @@ import java.util.Scanner;
 public class Game extends Application {
     public static final int WIDTH = 31;
     public static final int HEIGHT = 13;
-
+    public static final int FPS = 60;
     private GraphicsContext gc;
     private Canvas canvas;
     private List<Entity> entities = new ArrayList<>();
     private List<Entity> stillObjects = new ArrayList<>();
-
-
+    private long Interval = 1000000000 / FPS;
+    private long lastUpdate = 0;
+    private Bomber bomber;
     public static void main(String[] args) {
         Application.launch(Game.class);
     }
@@ -40,38 +42,44 @@ public class Game extends Application {
 
         // Tao root container
         Group root = new Group();
+        Scene scene = new Scene(root);
         root.getChildren().add(canvas);
 
-        // Tao scene
-        Scene scene = new Scene(root);
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                switch ( keyEvent.getCode() ) {
+                    case UP :bomber.upPressed = true ; break;
+                    case DOWN :bomber.downPressed = true; break;
+                    case RIGHT :bomber.rightPressed = true; break;
+                    case LEFT : bomber.leftPressed = true; break;
+                }
+            }
+        });
 
-        // Them scene vao stage
-        stage.setScene(scene);
-        stage.show();
+        scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                switch ( keyEvent.getCode() ) {
+                    case UP : bomber.upPressed = false ; break;
+                    case DOWN : bomber.downPressed = false; break;
+                    case RIGHT : bomber.rightPressed = false; break;
+                    case LEFT : bomber.leftPressed = false; break;
+                }
+            }
+        });
 
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
-                render();
-                update();
+                    render_update();
             }
         };
         timer.start();
-
         createMap();
         buildEntities();
-
-        Bomber bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
-        entities.add(bomberman);
-
-        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                switch (event.getCode()) {
-                    case Q: System.exit(1); break;
-                }
-            }
-        });
+        stage.setScene(scene);
+        stage.show();
     }
 
     public void buildEntities() throws FileNotFoundException {
@@ -86,7 +94,7 @@ public class Game extends Application {
                 object = new Grass(j, i, Sprite.grass.getFxImage());
 
                 switch (readMap.charAt(j)) {
-                    case 'p': object = new Bomber(j, i, Sprite.player_right.getFxImage()); break;
+                    case 'p': object = new Bomber(j, i, Sprite.player_right.getFxImage()); bomber = (Bomber) object;break;
                     case '1': object = new Monster(j, i, Sprite.balloom_right1.getFxImage()); break;
                     case '2': object = new Monster(j, i, Sprite.oneal_right1.getFxImage()); break;
                     case '#': object = new Wall(j, i, Sprite.wall.getFxImage()); break;
@@ -114,13 +122,21 @@ public class Game extends Application {
         }
     }
 
-    public void update() {
-        entities.forEach(Entity::update);
-    }
-
-    public void render() {
+    int count = 0;
+    long pre = 0;
+    public void render_update() {
+        count++;
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         stillObjects.forEach(g -> g.render(gc));
         entities.forEach(g -> g.render(gc));
+        entities.forEach(Entity::update);
+        bomber.render(gc);
+        lastUpdate = System.nanoTime();
+
+        if( System.nanoTime() - pre >= 1000000000 ) {
+            System.out.println(count);
+            count = 0;
+            pre = System.nanoTime();
+        }
     }
 }
