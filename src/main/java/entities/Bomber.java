@@ -8,18 +8,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
 public class Bomber extends Entity {
-    public static final int UP = 0, DOWN = 1 , LEFT = 2 , RIGHT = 3;
-    public static final int[] DIR_X = { 0 , 0 , -1 , 1 };
-    public static final int[] DIR_Y = { -1 , 1 , 0 , 0 };
+
     public static final int STEP_SIZE = 7;
     public int dir;
-    public int spriteCount = 0;
     public boolean pressed = false;
     public boolean upPressed = false , downPressed = false , leftPressed = false , rightPressed = false;
     public long IntervalMove = 1000000000 / 20;
-    public long IntervalSpriteChange = 1000000000 / 12;
+
     public long lastMove = 0;
-    public long lastSpriteChange = 0;
 
     public Bomber(int x, int y, Image img) {
         super( x, y, img);
