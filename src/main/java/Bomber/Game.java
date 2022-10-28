@@ -66,6 +66,7 @@ public class Game extends Application {
                     case DOWN : bomber.downPressed = false; break;
                     case RIGHT : bomber.rightPressed = false; break;
                     case LEFT : bomber.leftPressed = false; break;
+                    case Q: System.exit(1); break;
                 }
             }
         });
@@ -77,8 +78,10 @@ public class Game extends Application {
             }
         };
         timer.start();
+
         createMap();
         buildEntities();
+
         stage.setScene(scene);
         stage.show();
     }
@@ -95,8 +98,8 @@ public class Game extends Application {
                 object = new Grass(j, i, Sprite.grass.getFxImage());
 
                 switch (readMap.charAt(j)) {
-                    case 'p': object = new Bomber(j, i, Sprite.player_right.getFxImage()); bomber = (Bomber) object;break;
-                    case '1': object = new Monster(j, i, Sprite.balloom_right1.getFxImage()); break;
+                    case 'p': object = new Bomber(j, i, Sprite.player_right.getFxImage()); bomber = (Bomber) object; break;
+                    case '1': object = new Balloom(j, i, Sprite.balloom_right1.getFxImage()); break;
                     case '2': object = new Monster(j, i, Sprite.oneal_right1.getFxImage()); break;
                     case '#': object = new Wall(j, i, Sprite.wall.getFxImage()); break;
                     case '*': object = new Brick(j, i, Sprite.brick.getFxImage()); break;
@@ -127,7 +130,9 @@ public class Game extends Application {
 
     public void render_update() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
         stillObjects.forEach(g -> g.render(gc));
+
         entities.forEach(g -> g.render(gc));
         entities.forEach(Entity::update);
         lastUpdate = System.nanoTime();

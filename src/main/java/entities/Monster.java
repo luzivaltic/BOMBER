@@ -7,15 +7,15 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
 public class Monster extends Entity {
-
     public Monster(int x, int y, Image img) {
         super( x, y, img);
     }
 
     @Override
-    public void update() {
+    public void update(){
 
     }
+    public void move(){
 
-
+    }
 }

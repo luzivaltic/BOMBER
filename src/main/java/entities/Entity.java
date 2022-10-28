@@ -10,6 +10,13 @@ import graphics.Sprite;
 import java.awt.*;
 
 public abstract class Entity {
+    public static final int UP = 0, DOWN = 1 , LEFT = 2 , RIGHT = 3;
+    public static final int[] DIR_X = { 0 , 0 , -1 , 1 };
+    public static final int[] DIR_Y = { -1 , 1 , 0 , 0 };
+    public long IntervalSpriteChange = 1000000000 / 12;
+    public int spriteCount = 0;
+    public long lastSpriteChange = 0;
+
     //Tọa độ X tính từ góc trái trên trong Canvas
     protected int x;
 
