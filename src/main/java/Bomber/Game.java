@@ -97,35 +97,12 @@ public class Game extends Application {
                 object = new Grass(j, i, Sprite.grass.getFxImage());
 
                 switch (readMap.charAt(j)) {
-                    case 'p': {
-                        object = new Bomber(j, i, Sprite.player_right.getFxImage());
-                        bomber = (Bomber) object;
-                    } break;
-
-                    case '1': {
-                        object = new Balloom(j, i, Sprite.balloom_right1.getFxImage());
-                    } break;
-
-                    case '2': {
-                        object = new Kondoria(j, i, Sprite.kondoria_right1.getFxImage());
-                        //object = new Oneal(j, i, Sprite.oneal_right1.getFxImage());
-                    } break;
-
-                    case '#': {
-                        object = new Wall(j, i, Sprite.wall.getFxImage());
-                    } break;
-
-                    case '*': {
-                        object = new Brick(j, i, Sprite.brick.getFxImage());
-                    } break;
-
-                    case ' ': {
-                        object = new Grass(j, i, Sprite.grass.getFxImage());
-                    } break;
-
-                    case 'x': {
-                        object = new Portal(j, i, Sprite.portal.getFxImage());
-                    } break;
+                    case 'p': object = new Bomber(j, i, Sprite.player_right.getFxImage()); bomber = (Bomber) object; break;
+                    case '1': object = new Balloom(j, i, Sprite.balloom_right1.getFxImage()); break;
+                    case '2': object = new Monster(j, i, Sprite.oneal_right1.getFxImage()); break;
+                    case '#': object = new Wall(j, i, Sprite.wall.getFxImage()); break;
+                    case '*': object = new Brick(j, i, Sprite.brick.getFxImage()); break;
+                    case 'x': object = new Portal(j, i, Sprite.portal.getFxImage()); break;
                 }
 
                 entities.add(object);
