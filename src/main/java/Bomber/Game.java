@@ -25,11 +25,12 @@ public class Game extends Application {
     public static final int FPS = 60;
     private GraphicsContext gc;
     private Canvas canvas;
-    private List<Entity> entities = new ArrayList<>();
+    public static List<Entity> entities = new ArrayList<>();
     private List<Entity> stillObjects = new ArrayList<>();
     private long Interval = 1000000000 / FPS;
     private long lastUpdate = 0;
     private Bomber bomber;
+
     public static void main(String[] args) {
         Application.launch(Game.class);
     }
@@ -101,10 +102,12 @@ public class Game extends Application {
                     case '*': object = new Brick(j, i, Sprite.brick.getFxImage()); break;
                     case 'x': object = new Portal(j, i, Sprite.portal.getFxImage()); break;
                 }
-
                 entities.add(object);
             }
         }
+
+        entities.remove(bomber);
+        entities.add(bomber);
     }
 
     public void createMap() {
@@ -122,21 +125,11 @@ public class Game extends Application {
         }
     }
 
-    int count = 0;
-    long pre = 0;
     public void render_update() {
-        count++;
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         stillObjects.forEach(g -> g.render(gc));
         entities.forEach(g -> g.render(gc));
         entities.forEach(Entity::update);
-        bomber.render(gc);
         lastUpdate = System.nanoTime();
-
-        if( System.nanoTime() - pre >= 1000000000 ) {
-            System.out.println(count);
-            count = 0;
-            pre = System.nanoTime();
-        }
     }
 }

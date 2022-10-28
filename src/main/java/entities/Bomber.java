@@ -7,6 +7,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
+import java.awt.*;
+import java.util.List;
+import Bomber.Game;
 public class Bomber extends Entity {
     public static final int UP = 0, DOWN = 1 , LEFT = 2 , RIGHT = 3;
     public static final int[] DIR_X = { 0 , 0 , -1 , 1 };
@@ -15,18 +18,50 @@ public class Bomber extends Entity {
     public int dir;
     public int spriteCount = 0;
     public boolean pressed = false;
-    public boolean upPressed = false , downPressed = false , leftPressed = false , rightPressed = false;
+    public boolean upPressed = false , downPressed = false , leftPressed = false , rightPressed = false , spacePressed = false;
     public long IntervalMove = 1000000000 / 20;
     public long IntervalSpriteChange = 1000000000 / 12;
     public long lastMove = 0;
     public long lastSpriteChange = 0;
+    public boolean isDead = false;
+    public long endAnimation;
 
     public Bomber(int x, int y, Image img) {
         super( x, y, img);
+        solidArea = new Rectangle( 4 , 12 , 18 , 20 );
     }
 
+    private boolean moved = false;
     @Override
     public void update() {
+        if( isDead ) dead();
+        else {
+            move();
+            collideHandler();
+        }
+        if( System.nanoTime() - lastSpriteChange > IntervalSpriteChange ) {
+            spriteCount = (spriteCount + 1) % 3;
+            lastSpriteChange = System.nanoTime();
+        }
+    }
+    public void collideHandler() {
+        for(Entity entity : Game.entities ) {
+            if( entity instanceof Wall || entity instanceof Brick ) {
+                while ( this.isCollide(entity) ){
+                    x -= DIR_X[dir];
+                    y -= DIR_Y[dir];
+                }
+            }
+            if( entity instanceof Monster && this.isCollide(entity) ) {
+                isDead = true;
+                endAnimation = System.nanoTime() + IntervalSpriteChange * 3;
+                spriteCount = 0;
+                lastSpriteChange = System.nanoTime();
+            }
+        }
+    }
+    public void move() {
+        moved = false;
         if( rightPressed ) {
             dir = RIGHT;
             if( spriteCount == 0 ) img = Sprite.player_right.getFxImage();
@@ -54,16 +89,23 @@ public class Bomber extends Entity {
 
         pressed = downPressed || upPressed || rightPressed || leftPressed;
         if( pressed && System.nanoTime() - lastMove > IntervalMove ){
-            move();
+            x += DIR_X[dir] * STEP_SIZE;
+            y += DIR_Y[dir] * STEP_SIZE;
             lastMove = System.nanoTime();
+            moved = true;
         }
     }
-    public void move() {
-        x += DIR_X[dir] * STEP_SIZE;
-        y += DIR_Y[dir] * STEP_SIZE;
-        if( System.nanoTime() - lastSpriteChange > IntervalSpriteChange ) {
-            spriteCount = (spriteCount + 1) % 3;
-            lastSpriteChange = System.nanoTime();
+    public void dead(){
+        if( spriteCount == 0 ) img = Sprite.player_dead1.getFxImage();
+        else if( spriteCount == 1 ) img = Sprite.player_dead2.getFxImage();
+        else if( spriteCount == 2 ) img = Sprite.player_dead3.getFxImage();
+
+        if( endAnimation < System.nanoTime() ) {
+            isDead = false;
+            x = Sprite.SCALED_SIZE;
+            y = Sprite.SCALED_SIZE;
+            img = Sprite.player_right.getFxImage();
         }
     }
+
 }
