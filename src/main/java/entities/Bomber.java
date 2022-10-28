@@ -37,13 +37,15 @@ public class Bomber extends Entity {
         spriteChange();
     }
     public void collideHandler() {
-        for(Entity entity : Game.entities ) {
+        for(Entity entity : Game.stillObjects ) {
             if( entity instanceof Wall || entity instanceof Brick ) {
                 while ( this.isCollide(entity) ){
                     x -= DIR_X[dir];
                     y -= DIR_Y[dir];
                 }
             }
+        }
+        for(Entity entity : Game.entities) {
             if( entity instanceof Monster && this.isCollide(entity) ) {
                 isDead = true;
                 endAnimation = System.nanoTime() + IntervalSpriteChange * 3;

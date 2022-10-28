@@ -27,7 +27,7 @@ public class Game extends Application {
     private Canvas canvas;
     public static List<Entity> entities = new ArrayList<>();
     public static List<Entity> bombs = new ArrayList<>();
-    private List<Entity> stillObjects = new ArrayList<>();
+    public static List<Entity> stillObjects = new ArrayList<>();
     private long Interval = 1000000000 / FPS;
     private long lastUpdate = 0;
     private Bomber bomber;
@@ -102,15 +102,14 @@ public class Game extends Application {
                 object = new Grass(j, i, Sprite.grass.getFxImage());
 
                 switch (readMap.charAt(j)) {
-                    case 'p': object = new Bomber(j, i, Sprite.player_right.getFxImage()); bomber = (Bomber) object; break;
-                    case '1': object = new Balloom(j, i, Sprite.balloom_right1.getFxImage()); break;
-                    case '2': object = new Monster(j, i, Sprite.oneal_right1.getFxImage()); break;
-                    case '#': object = new Wall(j, i, Sprite.wall.getFxImage()); break;
-                    case '*': object = new Brick(j, i, Sprite.brick.getFxImage()); break;
-                    case 'x': object = new Portal(j, i, Sprite.portal.getFxImage()); break;
-                    case 'b': object = new Bomb(j , i , Sprite.bomb.getFxImage()); break;
+                    case 'p': object = new Bomber(j, i, Sprite.player_right.getFxImage()); bomber = (Bomber) object; entities.add(object); break;
+                    case '1': object = new Balloom(j, i, Sprite.balloom_right1.getFxImage()); entities.add(object); break;
+                    case '2': object = new Monster(j, i, Sprite.oneal_right1.getFxImage()); entities.add(object); break;
+                    case '#': object = new Wall(j, i, Sprite.wall.getFxImage()); stillObjects.add(object); break;
+                    case '*': object = new Brick(j, i, Sprite.brick.getFxImage()); stillObjects.add(object); break;
+                    case 'x': object = new Portal(j, i, Sprite.portal.getFxImage()); stillObjects.add(object); break;
                 }
-                entities.add(object);
+
             }
         }
 
