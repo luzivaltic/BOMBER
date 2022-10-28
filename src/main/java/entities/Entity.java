@@ -18,10 +18,10 @@ public abstract class Entity {
     public long lastSpriteChange = 0;
 
     //Tọa độ X tính từ góc trái trên trong Canvas
-    protected int x;
+    public int x;
 
     //Tọa độ Y tính từ góc trái trên trong Canvas
-    protected int y;
+    public int y;
 
     boolean solid = false;
     protected Image img;
@@ -45,6 +45,13 @@ public abstract class Entity {
                                 other.y + other.solidArea.y + other.solidArea.height );
 
         return ( max_x < min_x && max_y < min_y );
+    }
+
+    public void spriteChange() {
+        if( System.nanoTime() - lastSpriteChange > IntervalSpriteChange ) {
+            spriteCount = (spriteCount + 1) % 3;
+            lastSpriteChange = System.nanoTime();
+        }
     }
 
     public void render(GraphicsContext gc) {

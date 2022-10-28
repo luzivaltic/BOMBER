@@ -26,6 +26,7 @@ public class Game extends Application {
     private GraphicsContext gc;
     private Canvas canvas;
     public static List<Entity> entities = new ArrayList<>();
+    public static List<Entity> bombs = new ArrayList<>();
     private List<Entity> stillObjects = new ArrayList<>();
     private long Interval = 1000000000 / FPS;
     private long lastUpdate = 0;
@@ -66,6 +67,9 @@ public class Game extends Application {
                     case DOWN : bomber.downPressed = false; break;
                     case RIGHT : bomber.rightPressed = false; break;
                     case LEFT : bomber.leftPressed = false; break;
+                    case SPACE :
+                        entities.add( new Bomb(bomber.x / 32 , bomber.y / 32 , Sprite.bomb.getFxImage() ) );
+                        break;
                     case Q: System.exit(1); break;
                 }
             }
@@ -104,6 +108,7 @@ public class Game extends Application {
                     case '#': object = new Wall(j, i, Sprite.wall.getFxImage()); break;
                     case '*': object = new Brick(j, i, Sprite.brick.getFxImage()); break;
                     case 'x': object = new Portal(j, i, Sprite.portal.getFxImage()); break;
+                    case 'b': object = new Bomb(j , i , Sprite.bomb.getFxImage()); break;
                 }
                 entities.add(object);
             }
@@ -128,13 +133,20 @@ public class Game extends Application {
         }
     }
 
+    int count = 0;
+    long pre_count = 0;
     public void render_update() {
+        count++;
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
         stillObjects.forEach(g -> g.render(gc));
-
         entities.forEach(g -> g.render(gc));
         entities.forEach(Entity::update);
         lastUpdate = System.nanoTime();
+
+        if( System.nanoTime() - pre_count > 1000000000 ) {
+            System.out.println(count);
+            count = 0;
+            pre_count = System.nanoTime();
+        }
     }
 }

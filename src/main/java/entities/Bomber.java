@@ -17,9 +17,7 @@ public class Bomber extends Entity {
     public boolean pressed = false;
     public boolean upPressed = false , downPressed = false , leftPressed = false , rightPressed = false , spacePressed = false;
     public long IntervalMove = 1000000000 / 20;
-
     public long lastMove = 0;
-    public long lastSpriteChange = 0;
     public boolean isDead = false;
     public long endAnimation;
 
@@ -36,10 +34,7 @@ public class Bomber extends Entity {
             move();
             collideHandler();
         }
-        if( System.nanoTime() - lastSpriteChange > IntervalSpriteChange ) {
-            spriteCount = (spriteCount + 1) % 3;
-            lastSpriteChange = System.nanoTime();
-        }
+        spriteChange();
     }
     public void collideHandler() {
         for(Entity entity : Game.entities ) {
