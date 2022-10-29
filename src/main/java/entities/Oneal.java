@@ -12,10 +12,8 @@ import static Bomber.Game.bomber;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Oneal extends Monster {
-    private int direct;
     private long IntervalChangeDirection = 2100000000;
     private long lastChangeDirection = 0;
-    private boolean isDead = false;
 
     public Oneal(int x, int y, Image img) {
         super( x, y, img);
@@ -23,7 +21,7 @@ public class Oneal extends Monster {
 
     @Override
     public void update() {
-        if (isDead == true) {
+        if (isDead()) {
             dead();
         }
         else {
@@ -58,6 +56,14 @@ public class Oneal extends Monster {
     }
 
     private void dead() {
-        img = Sprite.balloom_dead.getFxImage();
+        if (countdown != 0) {
+            img = Sprite.oneal_dead.getFxImage();
+            countdown--;
+        }
+        else {
+            x = -1;
+            y = -1;
+            img = null;
+        }
     }
 }

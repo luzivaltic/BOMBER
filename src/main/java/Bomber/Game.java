@@ -112,9 +112,6 @@ public class Game extends Application {
 
             }
         }
-
-        entities.remove(bomber);
-        entities.add(bomber);
     }
 
     public void createMap() {

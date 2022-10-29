@@ -25,7 +25,7 @@ public class Balloom extends Monster {
 
     @Override
     public void update() {
-        if (isDead == true) {
+        if (isDead()) {
             dead();
         }
         else {
@@ -68,6 +68,14 @@ public class Balloom extends Monster {
     }
 
     private void dead() {
-        img = Sprite.balloom_dead.getFxImage();
+        if (countdown != 0) {
+            img = Sprite.balloom_dead.getFxImage();
+            countdown--;
+        }
+        else {
+            x = -1;
+            y = -1;
+            img = null;
+        }
     }
 }

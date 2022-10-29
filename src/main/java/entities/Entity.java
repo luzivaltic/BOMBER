@@ -35,6 +35,14 @@ public abstract class Entity {
         solidArea = new Rectangle(1 , 1 , Sprite.SCALED_SIZE - 2 , Sprite.SCALED_SIZE - 2 );
     }
 
+    public int getX() {
+        return this.x;
+    }
+
+    public int getY() {
+        return this.y;
+    }
+
     public boolean isCollide(Entity other) {
         double max_x = (double) Math.max( this.x + this.solidArea.x , other.x + other.solidArea.x );
         double min_x = Math.min( this.x + this.solidArea.x + this.solidArea.width ,
