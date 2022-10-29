@@ -26,11 +26,13 @@ public class Game extends Application {
     private GraphicsContext gc;
     private Canvas canvas;
     public static List<Entity> entities = new ArrayList<>();
-    public static List<Entity> bombs = new ArrayList<>();
     public static List<Entity> stillObjects = new ArrayList<>();
+    public static List<Entity> removeList = new ArrayList<>();
+    public static List<Entity> addList = new ArrayList<>();
     private long Interval = 1000000000 / FPS;
     private long lastUpdate = 0;
     private Bomber bomber;
+    public static char[][] board = new char[WIDTH][HEIGHT];
 
     public static void main(String[] args) {
         Application.launch(Game.class);
@@ -68,7 +70,9 @@ public class Game extends Application {
                     case RIGHT : bomber.rightPressed = false; break;
                     case LEFT : bomber.leftPressed = false; break;
                     case SPACE :
-                        entities.add( new Bomb(bomber.x / 32 , bomber.y / 32 , Sprite.bomb.getFxImage() ) );
+                        int bomber_block_x = ( bomber.x - 16 ) / 32 + 1;
+                        int bomber_block_y = ( bomber.y - 16 ) / 32 + 1;
+                        entities.add( new Bomb(bomber_block_x , bomber_block_y , Sprite.bomb.getFxImage() ) );
                         break;
                     case Q: System.exit(1); break;
                 }
@@ -100,7 +104,7 @@ public class Game extends Application {
             for (int j = 0; j < WIDTH; j++) {
                 Entity object;
                 object = new Grass(j, i, Sprite.grass.getFxImage());
-
+                board[j][i] = readMap.charAt(j);
                 switch (readMap.charAt(j)) {
                     case 'p': object = new Bomber(j, i, Sprite.player_right.getFxImage()); bomber = (Bomber) object; entities.add(object); break;
                     case '1': object = new Balloom(j, i, Sprite.balloom_right1.getFxImage()); entities.add(object); break;
@@ -140,6 +144,10 @@ public class Game extends Application {
         stillObjects.forEach(g -> g.render(gc));
         entities.forEach(g -> g.render(gc));
         entities.forEach(Entity::update);
+        entities.removeAll( removeList );
+        entities.addAll( addList );
+        addList.clear();
+        removeList.clear();
         lastUpdate = System.nanoTime();
 
         if( System.nanoTime() - pre_count > 1000000000 ) {
