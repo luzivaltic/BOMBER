@@ -26,6 +26,14 @@ public class Bomber extends Entity {
         solidArea = new Rectangle( 4 , 12 , 18 , 20 );
     }
 
+    public int getX() {
+        return this.x;
+    }
+
+    public int getY() {
+        return this.y;
+    }
+
     private boolean moved = false;
     @Override
     public void update() {

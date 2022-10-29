@@ -7,44 +7,67 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
+import Bomber.Game;
+import java.util.concurrent.ThreadLocalRandom;
+
 public class Balloom extends Monster {
-    private int dir = RIGHT;
+    private int dir;
     private long IntervalChangeDirection = 2100000000;
     private long lastChangeDirection = 0;
+    private boolean isDead = false;
 
     public Balloom(int x, int y, Image img) {
         super( x, y, img);
+        int randNum = ThreadLocalRandom.current().nextInt(0,  2);
+        if (randNum == 0) dir = LEFT;
+        else dir = RIGHT;
     }
 
     @Override
     public void update() {
+        if (isDead == true) {
+            dead();
+        }
+        else {
+            move();
+            collideHandler();
+        }
+
+        spriteChange();
+    }
+
+    public void collideHandler() {
+        for(Entity entity : Game.stillObjects ) {
+            if( entity instanceof Wall || entity instanceof Brick ) {
+                while (this.isCollide(entity)) {
+                    if (dir == LEFT) dir = RIGHT;
+                    else if (dir == RIGHT) dir = LEFT;
+
+                    x += DIR_X[dir];
+                    y += DIR_Y[dir];
+                    break;
+                }
+            }
+        }
+    }
+
+    public void move() {
         if (dir == LEFT) {
             if (spriteCount == 0) img = Sprite.balloom_left1.getFxImage();
             else if (spriteCount == 1) img = Sprite.balloom_left2.getFxImage();
             else if (spriteCount == 2) img = Sprite.balloom_left3.getFxImage();
         }
-        else if (dir == RIGHT) {
+        else {
             if (spriteCount == 0) img = Sprite.balloom_right1.getFxImage();
             else if (spriteCount == 1) img = Sprite.balloom_right2.getFxImage();
             else if (spriteCount == 2) img = Sprite.balloom_right3.getFxImage();
         }
 
-        if (System.nanoTime() - lastChangeDirection > IntervalChangeDirection) {
-            if (dir == LEFT) dir = RIGHT;
-            else dir = LEFT;
-            lastChangeDirection = System.nanoTime();
-        }
-
-        move();
-    }
-
-    public void move() {
         x += DIR_X[dir];
         y += DIR_Y[dir];
+    }
 
-        if (System.nanoTime() - lastSpriteChange > IntervalSpriteChange) {
-            spriteCount = (spriteCount + 1) % 3;
-            lastSpriteChange = System.nanoTime();
-        }
+    private void dead() {
+        img = Sprite.balloom_dead.getFxImage();
     }
 }
