@@ -28,18 +28,15 @@ public class Oneal extends Monster {
         spriteChange();
     }
 
-    boolean collide(int x, int y) {
+    private boolean checkGrid(int x, int y) {
         if (x < 0 || y < 0 || x >= WIDTH || y >= HEIGHT) {
             return true;
         }
 
-        for (Entity entity : stillObjects) {
-            if (entity instanceof Brick || entity instanceof Wall) {
-                if (this.isCollide(entity)) {
-                    return true;
-                }
-            }
+        if (board[x][y] == '#' || board[x][y] == '*') {
+            return true;
         }
+
         return false;
     }
 
@@ -48,8 +45,9 @@ public class Oneal extends Monster {
             int u = x + DIR_X[dir] * Sprite.SCALED_SIZE;
             int v = y + DIR_Y[dir] * Sprite.SCALED_SIZE;
 
-            if (collide(u, v) == false && distance[u][v] == 0) {
-                System.err.println(u + "  " + v);
+            System.err.println(x + " " + y + " " + u + " " + v);
+
+            if (checkGrid(u, v) == false && distance[u][v] == 0) {
                 distance[u][v] = distance[x][y] + 1;
                 dfs(distance, u, v);
             }

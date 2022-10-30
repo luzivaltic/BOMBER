@@ -31,25 +31,25 @@ public class Balloom extends Monster {
         }
         else {
             move();
-            collideHandler();
+            collide();
         }
 
         spriteChange();
     }
 
-    public void collideHandler() {
-        for(Entity entity : Game.stillObjects ) {
-            if( entity instanceof Wall || entity instanceof Brick ) {
-                while (this.isCollide(entity)) {
-                    if (dir == LEFT) dir = RIGHT;
-                    else if (dir == RIGHT) dir = LEFT;
+    public void collideHandler(Entity entity) {
+        if( entity instanceof Wall || entity instanceof Brick ) {
+            while ( this.isCollide(entity) ){
+                if (dir == LEFT) dir = RIGHT;
+                else if (dir == RIGHT) dir = LEFT;
 
-                    x += DIR_X[dir];
-                    y += DIR_Y[dir];
-                    break;
-                }
+                x += DIR_X[dir];
+                y += DIR_Y[dir];
+                break;
             }
         }
+
+
     }
 
     public void move() {
