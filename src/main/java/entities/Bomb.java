@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Bomb extends Entity {
-
     boolean exceededTimeLimit = false;
     private long timeLimit;
     public static int flameLength = 1;
     public List<Flame> curFlame;
+    public boolean getOut = false;
     public Bomb(int x, int y, Image img) {
         super(x, y, img);
         timeLimit = System.nanoTime() + 2000000000;
@@ -21,6 +21,9 @@ public class Bomb extends Entity {
 
     @Override
     public void update() {
+        if( !this.isCollide(Game.bomber) ) {
+            this.getOut = true;
+        }
         spriteChange();
         if( spriteCount == 0 ) img = Sprite.bomb.getFxImage();
         else if( spriteCount == 1 ) img = Sprite.bomb_1.getFxImage();
@@ -55,9 +58,6 @@ public class Bomb extends Entity {
                     ((Brick) entity).break_brick();
                     return true;
                 }
-                if( entity instanceof Monster ) {
-                    ((Monster) entity).dead();
-                }
             }
         }
 
@@ -66,6 +66,9 @@ public class Bomb extends Entity {
 
     public void explode() {
         if( System.nanoTime() > timeLimit ) {
+            if( !this.getOut ) {
+                Game.bomber.setDead();
+            }
             IntervalSpriteChange = 1000000000 / 6;
             if( !exceededTimeLimit ) {
                 exceededTimeLimit = true;
@@ -172,6 +175,14 @@ public class Bomb extends Entity {
                     }
                 }
 
+                for(Flame flame : curFlame) {
+                    for(Entity entity : Game.entities) {
+                        if( (entity instanceof Bomber || entity instanceof  Monster ) &&
+                                flame.isCollide(entity) ) {
+                            entity.setDead();
+                        }
+                    }
+                }
                 Game.addList.addAll( curFlame );
             }
 

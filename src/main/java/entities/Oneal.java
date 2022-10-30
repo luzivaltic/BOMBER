@@ -4,12 +4,8 @@ import graphics.Sprite;
 import javafx.scene.image.Image;
 
 import Bomber.Game;
-import Bomber.Game.*;
-import entities.Entity;
-import entities.Bomber;
 
-import static Bomber.Game.bomber;
-import java.util.concurrent.ThreadLocalRandom;
+import static Bomber.Game.*;
 
 public class Oneal extends Monster {
     private long IntervalChangeDirection = 2100000000;
@@ -26,17 +22,45 @@ public class Oneal extends Monster {
         }
         else {
             findBomber();
-            move();
+            //move();
         }
 
         spriteChange();
     }
 
+    private boolean checkGrid(int x, int y) {
+        if (x < 0 || y < 0 || x >= WIDTH || y >= HEIGHT) {
+            return true;
+        }
+
+        if (board[x][y] == '#' || board[x][y] == '*') {
+            return true;
+        }
+
+        return false;
+    }
+
+    void dfs(int[][] distance, int x, int y) {
+        for (int dir = 0; dir < 4; ++dir) {
+            int u = x + DIR_X[dir] * Sprite.SCALED_SIZE;
+            int v = y + DIR_Y[dir] * Sprite.SCALED_SIZE;
+
+            if (checkGrid(u, v) == false && distance[u][v] == 0) {
+                distance[u][v] = distance[x][y] + 1;
+                dfs(distance, u, v);
+            }
+        }
+    }
+
     private void findBomber() {
-        if (this.x < bomber.getX()) { direct = RIGHT; return; }
-        if (this.x > bomber.getX()) { direct = LEFT; return; }
-        if (this.y < bomber.getY()) { direct = DOWN; return; }
-        if (this.y > bomber.getY()) { direct = UP; return; }
+        int u = bomber.getX();
+        int v = bomber.getY();
+
+        int[][] distance = new int[WIDTH * Sprite.SCALED_SIZE][HEIGHT * Sprite.SCALED_SIZE];
+        distance[u][v] = 2;
+
+        dfs(distance, u, v);
+
     }
 
     public void move() {
@@ -56,14 +80,13 @@ public class Oneal extends Monster {
     }
 
     public void dead() {
-        if (countdown != 0) {
+        if (countdownSecond != 0) {
             img = Sprite.oneal_dead.getFxImage();
-            countdown--;
+            countdownSecond--;
         }
         else {
-            x = -1;
-            y = -1;
             img = null;
+            removeList.add(this);
         }
     }
 }

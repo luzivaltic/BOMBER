@@ -18,9 +18,7 @@ public class Bomber extends Entity {
     public boolean upPressed = false , downPressed = false , leftPressed = false , rightPressed = false , spacePressed = false;
     public long IntervalMove = 1000000000 / 20;
     public long lastMove = 0;
-    public boolean isDead = false;
     public long endAnimation;
-
     public Bomber(int x, int y, Image img) {
         super( x, y, img);
         solidArea = new Rectangle( 4 , 12 , 18 , 20 );
@@ -37,11 +35,17 @@ public class Bomber extends Entity {
         spriteChange();
     }
 
+    @Override
+    public void setDead() {
+        isDead = true;
+        endAnimation = System.nanoTime() + IntervalSpriteChange * 3;
+        spriteCount = 0;
+        lastSpriteChange = System.nanoTime();
+    }
 
     @Override
     public void collideHandler(Entity entity) {
         if( entity instanceof Wall || entity instanceof Brick ) {
-
             if( this.isCollide(entity) ) {
                 int curX = x , curY = y;
                 boolean fixCollide = false;
@@ -73,10 +77,16 @@ public class Bomber extends Entity {
         }
 
         if( entity instanceof Monster && this.isCollide(entity) ) {
-            isDead = true;
-            endAnimation = System.nanoTime() + IntervalSpriteChange * 3;
-            spriteCount = 0;
-            lastSpriteChange = System.nanoTime();
+            this.setDead();
+        }
+
+        if( entity instanceof Bomb && this.isCollide(entity) ) {
+            if( ((Bomb) entity).getOut ) {
+                while ( this.isCollide(entity) ){
+                    x -= DIR_X[dir];
+                    y -= DIR_Y[dir];
+                }
+            }
         }
     }
 

@@ -8,7 +8,6 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import entities.*;
 import graphics.Sprite;
@@ -108,7 +107,7 @@ public class Game extends Application {
                 switch (readMap.charAt(j)) {
                     case 'p': bomber = new Bomber(j, i, Sprite.player_right.getFxImage()); break;
                     case '1': entities.add(new Balloom(j, i, Sprite.balloom_right1.getFxImage())); break;
-//                    case '2': entities.add(new Oneal(j, i, Sprite.oneal_right1.getFxImage())); break;
+                    case '2': entities.add(new Oneal(j, i, Sprite.oneal_right1.getFxImage())); break;
                     case '#': stillObjects.add(new Wall(j, i, Sprite.wall.getFxImage()));break;
                     case '*': entities.add(new Brick(j, i, Sprite.brick.getFxImage())); break;
                     case 'x': stillObjects.add(new Portal(j, i, Sprite.portal.getFxImage())); break;
@@ -146,7 +145,7 @@ public class Game extends Application {
         lastUpdate = System.nanoTime();
 
         if( System.nanoTime() - pre_count > 1000000000 ) {
-            System.out.println(count);
+//            System.out.println(count);
             count = 0;
             pre_count = System.nanoTime();
         }

@@ -27,6 +27,7 @@ public abstract class Entity {
     boolean solid = false;
     protected Image img;
     public Rectangle solidArea;
+    public boolean isDead = false;
 
     //Khởi tạo đối tượng, chuyển từ tọa độ đơn vị sang tọa độ trong canvas
     public Entity( int xUnit, int yUnit, Image img) {
@@ -34,14 +35,6 @@ public abstract class Entity {
         this.y = yUnit * Sprite.SCALED_SIZE;
         this.img = img;
         solidArea = new Rectangle(1 , 1 , Sprite.SCALED_SIZE - 2 , Sprite.SCALED_SIZE - 2 );
-    }
-
-    public int getX() {
-        return this.x;
-    }
-
-    public int getY() {
-        return this.y;
     }
 
     public boolean isCollide(Entity other) {
@@ -65,21 +58,30 @@ public abstract class Entity {
 
     public void collide() {
         for(Entity entity : Game.stillObjects) {
-            if( isCollide(entity) ) {
+            if ( isCollide(entity) ) {
                 collideHandler(entity);
             }
         }
         for(Entity entity : Game.entities) {
-            if( isCollide(entity) ) {
+            if ( isCollide(entity) ) {
                 collideHandler(entity);
             }
         }
     }
 
     public void collideHandler(Entity entity) {}
+    public void setDead() {}
 
     public void render(GraphicsContext gc) {
         gc.drawImage(img, x, y);
     }
     public abstract void update();
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
 }

@@ -8,13 +8,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
 import Bomber.Game;
+import static Bomber.Game.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Balloom extends Monster {
     private int dir;
     private long IntervalChangeDirection = 2100000000;
     private long lastChangeDirection = 0;
-    private boolean isDead = false;
 
     public Balloom(int x, int y, Image img) {
         super( x, y, img);
@@ -30,23 +30,21 @@ public class Balloom extends Monster {
         }
         else {
             move();
-            collideHandler();
+            collide();
         }
 
         spriteChange();
     }
 
-    public void collideHandler() {
-        for(Entity entity : Game.stillObjects ) {
-            if( entity instanceof Wall || entity instanceof Brick ) {
-                while (this.isCollide(entity)) {
-                    if (dir == LEFT) dir = RIGHT;
-                    else if (dir == RIGHT) dir = LEFT;
+    public void collideHandler(Entity entity) {
+        if( entity instanceof Wall || entity instanceof Brick || entity instanceof Bomb ) {
+            while ( this.isCollide(entity) ){
+                if (dir == LEFT) dir = RIGHT;
+                else if (dir == RIGHT) dir = LEFT;
 
-                    x += DIR_X[dir];
-                    y += DIR_Y[dir];
-                    break;
-                }
+                x += DIR_X[dir];
+                y += DIR_Y[dir];
+                break;
             }
         }
     }
@@ -68,14 +66,12 @@ public class Balloom extends Monster {
     }
 
     public void dead() {
-        if (countdown != 0) {
+        if (countdownSecond != 0) {
             img = Sprite.balloom_dead.getFxImage();
-            countdown--;
+            countdownSecond--;
         }
         else {
-            x = -1;
-            y = -1;
-            img = null;
+            removeList.add(this);
         }
     }
 }
