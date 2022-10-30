@@ -22,7 +22,7 @@ public class Oneal extends Monster {
         }
         else {
             findBomber();
-            move();
+            //move();
         }
 
         spriteChange();
@@ -40,16 +40,16 @@ public class Oneal extends Monster {
                 }
             }
         }
-
         return false;
     }
 
     void dfs(int[][] distance, int x, int y) {
         for (int dir = 0; dir < 4; ++dir) {
-            int u = x + DIR_X[dir];
-            int v = y + DIR_Y[dir];
+            int u = x + DIR_X[dir] * Sprite.SCALED_SIZE;
+            int v = y + DIR_Y[dir] * Sprite.SCALED_SIZE;
 
             if (collide(u, v) == false && distance[u][v] == 0) {
+                System.err.println(u + "  " + v);
                 distance[u][v] = distance[x][y] + 1;
                 dfs(distance, u, v);
             }
@@ -57,6 +57,13 @@ public class Oneal extends Monster {
     }
 
     private void findBomber() {
+        int u = bomber.getX();
+        int v = bomber.getY();
+
+        int[][] distance = new int[WIDTH * Sprite.SCALED_SIZE][HEIGHT * Sprite.SCALED_SIZE];
+        distance[u][v] = 2;
+
+        dfs(distance, u, v);
 
     }
 
