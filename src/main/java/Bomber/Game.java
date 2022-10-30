@@ -31,8 +31,6 @@ public class Game extends Application {
     private long Interval = 1000000000 / FPS;
     private long lastUpdate = 0;
     public static Bomber bomber;
-    public static char[][] board = new char[WIDTH][HEIGHT];
-
 
     public static void main(String[] args) {
         Application.launch(Game.class);
@@ -103,11 +101,25 @@ public class Game extends Application {
 
             for (int j = 0; j < WIDTH; j++) {
                 Entity object = null;
-                board[j][i] = readMap.charAt(j);
                 switch (readMap.charAt(j)) {
                     case 'p': bomber = new Bomber(j, i, Sprite.player_right.getFxImage()); break;
                     case '1': entities.add(new Balloom(j, i, Sprite.balloom_right1.getFxImage())); break;
                     case '2': entities.add(new Oneal(j, i, Sprite.oneal_right1.getFxImage())); break;
+                    case 'f': {
+                        stillObjects.add(new FlameItem(j, i, Sprite.powerup_flames.getFxImage()));
+                        entities.add(new Brick(j, i, Sprite.brick.getFxImage()));
+                        break;
+                    }
+                    case 's': {
+                        stillObjects.add(new SpeedItem(j, i, Sprite.powerup_speed.getFxImage()));
+                        entities.add(new Brick(j, i, Sprite.brick.getFxImage()));
+                        break;
+                    }
+                    case 'b': {
+                        stillObjects.add(new BombItem(j, i, Sprite.powerup_bombs.getFxImage()));
+                        entities.add(new Brick(j, i, Sprite.brick.getFxImage()));
+                        break;
+                    }
                     case '#': stillObjects.add(new Wall(j, i, Sprite.wall.getFxImage()));break;
                     case '*': entities.add(new Brick(j, i, Sprite.brick.getFxImage())); break;
                     case 'x': stillObjects.add(new Portal(j, i, Sprite.portal.getFxImage())); break;
