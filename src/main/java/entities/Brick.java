@@ -25,7 +25,6 @@ public class Brick extends Entity {
         else if( spriteCount == 1 ) img = Sprite.brick_exploded1.getFxImage();
         else if( spriteCount == 2 ) img = Sprite.brick_exploded2.getFxImage();
         if( System.nanoTime() > endAnimation ) {
-            System.out.println("????");
             Game.removeList.add(this);
         }
     }

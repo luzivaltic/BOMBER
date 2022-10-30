@@ -41,6 +41,31 @@ public class Bomber extends Entity {
     @Override
     public void collideHandler(Entity entity) {
         if( entity instanceof Wall || entity instanceof Brick ) {
+
+            if( this.isCollide(entity) ) {
+                int curX = x , curY = y;
+                boolean fixCollide = false;
+                for(int i = -5; i <= 5; i++) {
+                    this.x = curX + i;
+                    if( !this.isCollide(entity) ) {
+                        fixCollide = true;
+                        break;
+                    }
+                }
+                if(!fixCollide)
+                {
+                    this.x = curX;
+                    for(int i = -5; i <= 5; i++) {
+                        this.y = curY + i;
+                        if( !this.isCollide(entity) ) {
+                            fixCollide = true;
+                            break;
+                        }
+                    }
+                    if(!fixCollide) this.y = curY;
+                }
+            }
+
             while ( this.isCollide(entity) ){
                 x -= DIR_X[dir];
                 y -= DIR_Y[dir];

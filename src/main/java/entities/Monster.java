@@ -21,13 +21,8 @@ public class Monster extends Entity {
     }
 
     @Override
-    public void update(){
+    public void update(){}
+    public void move(){}
 
-    }
-    public void move(){
-
-    }
-
-    public void dead() {
-    }
+    public void dead() {}
 }

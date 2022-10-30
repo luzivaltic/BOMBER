@@ -55,6 +55,9 @@ public class Bomb extends Entity {
                     ((Brick) entity).break_brick();
                     return true;
                 }
+                if( entity instanceof Monster ) {
+                    ((Monster) entity).dead();
+                }
             }
         }
 

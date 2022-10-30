@@ -69,7 +69,6 @@ public abstract class Entity {
                 collideHandler(entity);
             }
         }
-
         for(Entity entity : Game.entities) {
             if( isCollide(entity) ) {
                 collideHandler(entity);
@@ -77,9 +76,7 @@ public abstract class Entity {
         }
     }
 
-    public void collideHandler(Entity entity) {
-
-    }
+    public void collideHandler(Entity entity) {}
 
     public void render(GraphicsContext gc) {
         gc.drawImage(img, x, y);
