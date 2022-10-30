@@ -27,4 +27,7 @@ public class Monster extends Entity {
     public void move(){
 
     }
+
+    public void dead() {
+    }
 }

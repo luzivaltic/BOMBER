@@ -67,7 +67,7 @@ public class Balloom extends Monster {
         y += DIR_Y[dir];
     }
 
-    private void dead() {
+    public void dead() {
         if (countdown != 0) {
             img = Sprite.balloom_dead.getFxImage();
             countdown--;

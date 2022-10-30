@@ -103,16 +103,15 @@ public class Game extends Application {
             String readMap = scanner.nextLine();
 
             for (int j = 0; j < WIDTH; j++) {
-                Entity object;
-                object = new Grass(j, i, Sprite.grass.getFxImage());
+                Entity object = null;
                 board[j][i] = readMap.charAt(j);
                 switch (readMap.charAt(j)) {
-                    case 'p': object = new Bomber(j, i, Sprite.player_right.getFxImage()); bomber = (Bomber) object; entities.add(object); break;
-                    case '1': object = new Balloom(j, i, Sprite.balloom_right1.getFxImage()); entities.add(object); break;
-                    case '2': object = new Oneal(j, i, Sprite.oneal_right1.getFxImage()); entities.add(object); break;
-                    case '#': object = new Wall(j, i, Sprite.wall.getFxImage()); stillObjects.add(object); break;
-                    case '*': object = new Brick(j, i, Sprite.brick.getFxImage()); stillObjects.add(object); break;
-                    case 'x': object = new Portal(j, i, Sprite.portal.getFxImage()); stillObjects.add(object); break;
+                    case 'p': bomber = new Bomber(j, i, Sprite.player_right.getFxImage()); entities.add(bomber); break;
+                    case '1': entities.add(new Balloom(j, i, Sprite.balloom_right1.getFxImage())); break;
+                    case '2': entities.add(new Oneal(j, i, Sprite.oneal_right1.getFxImage())); break;
+                    case '#': stillObjects.add(new Wall(j, i, Sprite.wall.getFxImage()));break;
+                    case '*': entities.add(new Brick(j, i, Sprite.brick.getFxImage())); break;
+                    case 'x': stillObjects.add(new Portal(j, i, Sprite.portal.getFxImage())); break;
                 }
 
             }
@@ -124,11 +123,9 @@ public class Game extends Application {
             for (int j = 0; j < HEIGHT; j++) {
                 Entity object;
                 object = new Grass(i, j, Sprite.grass.getFxImage());
-
                 if (j == 0 || j == HEIGHT - 1 || i == 0 || i == WIDTH - 1) {
                     object = new Wall(i, j, Sprite.wall.getFxImage());
                 }
-
                 stillObjects.add(object);
             }
         }

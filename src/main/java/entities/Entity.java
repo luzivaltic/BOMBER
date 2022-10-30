@@ -8,6 +8,7 @@ import javafx.scene.paint.Color;
 import graphics.Sprite;
 
 import java.awt.*;
+import Bomber.Game;
 
 public abstract class Entity {
     public static final int UP = 0, DOWN = 1 , LEFT = 2 , RIGHT = 3;
@@ -60,6 +61,24 @@ public abstract class Entity {
             spriteCount = (spriteCount + 1) % 3;
             lastSpriteChange = System.nanoTime();
         }
+    }
+
+    public void collide() {
+        for(Entity entity : Game.stillObjects) {
+            if( isCollide(entity) ) {
+                collideHandler(entity);
+            }
+        }
+
+        for(Entity entity : Game.entities) {
+            if( isCollide(entity) ) {
+                collideHandler(entity);
+            }
+        }
+    }
+
+    public void collideHandler(Entity entity) {
+
     }
 
     public void render(GraphicsContext gc) {

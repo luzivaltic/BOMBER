@@ -32,28 +32,29 @@ public class Bomber extends Entity {
         if( isDead ) dead();
         else {
             move();
-            collideHandler();
+            collide();
         }
         spriteChange();
     }
-    public void collideHandler() {
-        for(Entity entity : Game.stillObjects ) {
-            if( entity instanceof Wall || entity instanceof Brick ) {
-                while ( this.isCollide(entity) ){
-                    x -= DIR_X[dir];
-                    y -= DIR_Y[dir];
-                }
+
+
+    @Override
+    public void collideHandler(Entity entity) {
+        if( entity instanceof Wall || entity instanceof Brick ) {
+            while ( this.isCollide(entity) ){
+                x -= DIR_X[dir];
+                y -= DIR_Y[dir];
             }
         }
-        for(Entity entity : Game.entities) {
-            if( entity instanceof Monster && this.isCollide(entity) ) {
-                isDead = true;
-                endAnimation = System.nanoTime() + IntervalSpriteChange * 3;
-                spriteCount = 0;
-                lastSpriteChange = System.nanoTime();
-            }
+
+        if( entity instanceof Monster && this.isCollide(entity) ) {
+            isDead = true;
+            endAnimation = System.nanoTime() + IntervalSpriteChange * 3;
+            spriteCount = 0;
+            lastSpriteChange = System.nanoTime();
         }
     }
+
     public void move() {
         moved = false;
         if( rightPressed ) {

@@ -55,7 +55,7 @@ public class Oneal extends Monster {
         y += DIR_Y[direct];
     }
 
-    private void dead() {
+    public void dead() {
         if (countdown != 0) {
             img = Sprite.oneal_dead.getFxImage();
             countdown--;

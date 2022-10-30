@@ -41,9 +41,23 @@ public class Bomb extends Entity {
     }
 
     public boolean is_explode_collide(int block_x , int block_y) {
-        if( Game.board[block_x][block_y] == '#' || Game.board[block_x][block_y] == '*' ){
-            return true;
+        for(Entity entity : Game.stillObjects) {
+            if( entity.x/32 == block_x && entity.y/32 == block_y ) {
+                if( entity instanceof Wall ) {
+                    return true;
+                }
+            }
         }
+
+        for(Entity entity : Game.entities) {
+            if( entity.x/32 == block_x && entity.y/32 == block_y ) {
+                if( entity instanceof Brick ) {
+                    ((Brick) entity).break_brick();
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 
@@ -53,8 +67,8 @@ public class Bomb extends Entity {
             if( !exceededTimeLimit ) {
                 exceededTimeLimit = true;
                 spriteCount = 0;
-                boolean noLeft = false;
                 // left
+                boolean noLeft = false;
                 for(int i = 0 ; i < flameLength - 1; i++) {
                     Sprite[] newFlameSprite = new_flame_sprite(
                             Sprite.explosion_horizontal ,
