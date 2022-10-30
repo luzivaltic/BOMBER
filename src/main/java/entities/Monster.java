@@ -9,26 +9,23 @@ import javafx.scene.paint.Color;
 import static Bomber.Game.bomber;
 
 public class Monster extends Entity {
-    public int countdown;
     public int direct;
-    public boolean isDead = false;
+    public long countdownSecond = 10;
+
     public Monster(int x, int y, Image img) {
         super( x, y, img);
     }
 
     public boolean isDead() {
         if (this.isCollide(bomber)) {
-            countdown = 5;
             isDead = true;
         }
+
         return isDead;
     }
 
     @Override
-    public void update(){
-
-    }
-    public void move(){
-
-    }
+    public void update(){}
+    public void move() {}
+    public void dead() {}
 }

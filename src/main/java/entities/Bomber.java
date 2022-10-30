@@ -18,7 +18,6 @@ public class Bomber extends Entity {
     public boolean upPressed = false , downPressed = false , leftPressed = false , rightPressed = false , spacePressed = false;
     public long IntervalMove = 1000000000 / 20;
     public long lastMove = 0;
-    public boolean isDead = false;
     public long endAnimation;
 
     public Bomber(int x, int y, Image img) {

@@ -26,6 +26,7 @@ public abstract class Entity {
     boolean solid = false;
     protected Image img;
     public Rectangle solidArea;
+    public boolean isDead = false;
 
     //Khởi tạo đối tượng, chuyển từ tọa độ đơn vị sang tọa độ trong canvas
     public Entity( int xUnit, int yUnit, Image img) {

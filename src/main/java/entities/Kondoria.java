@@ -4,6 +4,7 @@ import graphics.Sprite;
 import javafx.scene.image.Image;
 
 import static Bomber.Game.bomber;
+import static Bomber.Game.removeList;
 
 public class Kondoria extends Monster {
     private long IntervalChangeDirection = 2100000000;
@@ -49,15 +50,14 @@ public class Kondoria extends Monster {
         y += DIR_Y[direct];
     }
 
-    private void dead() {
-        if (countdown != 0) {
+    public void dead() {
+        if (countdownSecond != 0) {
             img = Sprite.kondoria_dead.getFxImage();
-            countdown--;
+            countdownSecond--;
         }
         else {
-            x = -1;
-            y = -1;
             img = null;
+            removeList.add(this);
         }
     }
 }

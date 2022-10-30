@@ -8,6 +8,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
 import Bomber.Game;
+import static Bomber.Game.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Balloom extends Monster {
@@ -67,15 +68,14 @@ public class Balloom extends Monster {
         y += DIR_Y[dir];
     }
 
-    private void dead() {
-        if (countdown != 0) {
+    public void dead() {
+        if (countdownSecond != 0) {
             img = Sprite.balloom_dead.getFxImage();
-            countdown--;
+            countdownSecond--;
         }
         else {
-            x = -1;
-            y = -1;
             img = null;
+            removeList.add(this);
         }
     }
 }

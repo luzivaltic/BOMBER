@@ -107,8 +107,8 @@ public class Game extends Application {
                 board[j][i] = readMap.charAt(j);
                 switch (readMap.charAt(j)) {
                     case 'p': object = new Bomber(j, i, Sprite.player_right.getFxImage()); bomber = (Bomber) object; entities.add(object); break;
-                    case '1': object = new Balloom(j, i, Sprite.balloom_right1.getFxImage()); entities.add(object); break;
-                    case '2': object = new Kondoria(j, i, Sprite.kondoria_right1.getFxImage()); entities.add(object); break;
+                    //case '1': object = new Balloom(j, i, Sprite.balloom_right1.getFxImage()); entities.add(object); break;
+                    case '2': object = new Oneal(j, i, Sprite.oneal_right1.getFxImage()); entities.add(object); break;
                     case '#': object = new Wall(j, i, Sprite.wall.getFxImage()); stillObjects.add(object); break;
                     case '*': object = new Brick(j, i, Sprite.brick.getFxImage()); stillObjects.add(object); break;
                     case 'x': object = new Portal(j, i, Sprite.portal.getFxImage()); stillObjects.add(object); break;
