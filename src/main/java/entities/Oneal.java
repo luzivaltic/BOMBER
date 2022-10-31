@@ -45,7 +45,7 @@ public class Oneal extends Monster {
         Monster temp = new Monster(block_x, block_y, null);
 
         for (Entity entity : entities) {
-            if (entity instanceof Brick || entity instanceof Wall) {
+            if (entity instanceof Brick || entity instanceof Wall || entity instanceof Bomb) {
                 if (temp.isCollide(entity)) {
                     return false;
                 }
@@ -53,7 +53,7 @@ public class Oneal extends Monster {
         }
 
         for (Entity entity : stillObjects) {
-            if (entity instanceof Brick || entity instanceof Wall) {
+            if (entity instanceof Brick || entity instanceof Wall || entity instanceof Bomb) {
                 if (temp.isCollide(entity)) {
                     return false;
                 }
@@ -113,21 +113,18 @@ public class Oneal extends Monster {
             }
         }
 
-        System.err.println(block(this.x) + " " + block(this.y));
-
         if (preMove[block(this.x)][block(this.y)] != -1) {
             direct = preMove[block(this.x)][block(this.y)];
         } else {
             for (int dir = 0; dir < 4; ++dir) {
-                int u = x + DIR_X[dir];
-                int v = y + DIR_Y[dir];
+                int u = block(this.x) + DIR_X[dir];
+                int v = block(this.y) + DIR_Y[dir];
                 if (checkGrid(u, v) == true) {
                     direct = dir;
                     break;
                 }
             }
         }
-        System.err.println(direct);
     }
 
     public void move() {
