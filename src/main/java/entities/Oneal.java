@@ -9,18 +9,11 @@ import java.util.*;
 
 import static Bomber.Game.*;
 
-class Pair {
-    public int x;
-    public int y;
-    public Pair(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-}
-
 public class Oneal extends Monster {
     private long IntervalChangeDirection = 2100000000;
     private long lastChangeDirection = 0;
+
+    private int countdown = Sprite.SCALED_SIZE;
 
     public Oneal(int x, int y, Image img) {
         super( x, y, img);
@@ -33,48 +26,54 @@ public class Oneal extends Monster {
         }
         else {
             findBomber();
-            move();
+            if (countdown != 0) {
+                move();
+                countdown--;
+            }
         }
 
         spriteChange();
     }
 
+    private int block(int x) {
+        return (x + 16 + Sprite.SCALED_SIZE - 1) / Sprite.SCALED_SIZE - 1;
+    }
+
     private boolean checkGrid(int u, int v) {
-        /*if (u < 0 || v < 0 || u >= WIDTH || v >= HEIGHT) {
+        if (u < 0 || v < 0 || u >= WIDTH || v >= HEIGHT) {
             return false;
         }
 
-        Entity temp = new Monster(u * Sprite.SCALED_SIZE, v * Sprite.SCALED_SIZE, null);
+        Monster temp = new Monster(u, v, null);
 
-        for (Entity entity : stillObjects) {
-            if (entity instanceof Wall) {
+        for (Entity entity : entities) {
+            if (entity instanceof Brick || entity instanceof Wall) {
                 if (temp.isCollide(entity)) {
                     return false;
                 }
             }
         }
-
-        for (Entity entity : entities) {
-            if (entity instanceof Brick) {
-                if (temp.isCollide(entity)) {
-                    return false;
-                }
-            }
-        }*/
 
         return true;
     }
 
     private void findBomber() {
-        /*System.err.println(bomber.x + " " + bomber.y);
+        if (countdown != 0) {
+            return;
+        }
 
         LinkedList<Pair> queue = new LinkedList<>();
-        boolean[][] color = new boolean[WIDTH][HEIGHT];
-        int[][] distance = new int[WIDTH][HEIGHT];
+        boolean[][] color = new boolean[2 * WIDTH][2 * HEIGHT];
+        int[][] preMove = new int[2 * WIDTH][2 * HEIGHT];
 
-        queue.add(new Pair(convert(bomber.x), convert(bomber.y)));
-        distance[convert(bomber.x)][convert(bomber.y)] = 1;
-        color[convert(bomber.x)][convert(bomber.y)] = true;
+        for (int i = 0; i < WIDTH; ++i) {
+            for (int j = 0; j < HEIGHT; ++j) {
+                preMove[i][j] = -1;
+            }
+        }
+
+        queue.add(new Pair(block(bomber.x), block(bomber.y)));
+        color[block(bomber.x)][block(bomber.y)] = true;
 
         while (queue.isEmpty() == false) {
             Pair element = queue.getFirst();
@@ -90,34 +89,37 @@ public class Oneal extends Monster {
                 if (checkGrid(u, v) == true) {
                     if (color[u][v] == false) {
                         color[u][v] = true;
-                        distance[u][v] = distance[x][y] + 1;
+
+                        if (dir == LEFT) preMove[u][v] = RIGHT;
+                        else if (dir == RIGHT) preMove[u][v] = LEFT;
+                        else if (dir == UP) preMove[u][v] = DOWN;
+                        else preMove[u][v] = UP;
+
+                        if (u == this.x && v == this.y) {
+                            break;
+                        }
+
                         queue.add(new Pair(u, v));
                     }
                 }
             }
         }
 
-        System.err.println(distance[convert(this.x)][convert(this.y)]);
+        countdown = Sprite.SCALED_SIZE;
 
-        if (distance[convert(x)][convert(y)] != 0) {
-            for (int dir = 0; dir < 4; ++dir) {
-                int u = convert(x) + DIR_X[dir];
-                int v = convert(y) + DIR_Y[dir];
-                if (checkGrid(u, v) == true && distance[convert(x)][convert(y)] == distance[u][v] + 1) {
-                    direct = dir;
-                    break;
-                }
-            }
+        if (preMove[block(this.x)][block(this.y)] != -1) {
+            direct = preMove[block(this.x)][block(this.y)];
         } else {
             for (int dir = 0; dir < 4; ++dir) {
-                int u = convert(x) + DIR_X[dir];
-                int v = convert(y) + DIR_Y[dir];
+                int u = x + DIR_X[dir];
+                int v = y + DIR_Y[dir];
                 if (checkGrid(u, v) == true) {
                     direct = dir;
                     break;
                 }
             }
-        }*/
+        }
+        System.err.println(direct);
     }
 
     public void move() {

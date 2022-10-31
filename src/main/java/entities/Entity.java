@@ -37,14 +37,6 @@ public abstract class Entity {
         solidArea = new Rectangle(1 , 1 , Sprite.SCALED_SIZE - 2 , Sprite.SCALED_SIZE - 2 );
     }
 
-    public int getX() {
-        return this.x;
-    }
-
-    public int getY() {
-        return this.y;
-    }
-
     public boolean isCollide(Entity other) {
         double max_x = (double) Math.max( this.x + this.solidArea.x , other.x + other.solidArea.x );
         double min_x = Math.min( this.x + this.solidArea.x + this.solidArea.width ,
@@ -70,7 +62,6 @@ public abstract class Entity {
                 collideHandler(entity);
             }
         }
-
         for(Entity entity : Game.entities) {
             if ( isCollide(entity) ) {
                 collideHandler(entity);
@@ -78,12 +69,19 @@ public abstract class Entity {
         }
     }
 
-    public void collideHandler(Entity entity) {
-
-    }
+    public void collideHandler(Entity entity) {}
+    public void setDead() {}
 
     public void render(GraphicsContext gc) {
         gc.drawImage(img, x, y);
     }
     public abstract void update();
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
 }

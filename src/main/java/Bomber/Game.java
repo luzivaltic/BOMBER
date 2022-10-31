@@ -36,6 +36,15 @@ public class Game extends Application {
         Application.launch(Game.class);
     }
 
+    public static class Pair {
+        public int x;
+        public int y;
+        public Pair(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
         // Tao Canvas
@@ -126,7 +135,6 @@ public class Game extends Application {
                 }
             }
         }
-
         entities.add(bomber);
     }
 
@@ -158,7 +166,7 @@ public class Game extends Application {
         lastUpdate = System.nanoTime();
 
         if( System.nanoTime() - pre_count > 1000000000 ) {
-            //System.out.println(count);
+//            System.out.println(count);
             count = 0;
             pre_count = System.nanoTime();
         }

@@ -15,7 +15,6 @@ public class Balloom extends Monster {
     private int dir;
     private long IntervalChangeDirection = 2100000000;
     private long lastChangeDirection = 0;
-    private boolean isDead = false;
 
     public Balloom(int x, int y, Image img) {
         super( x, y, img);
@@ -38,7 +37,7 @@ public class Balloom extends Monster {
     }
 
     public void collideHandler(Entity entity) {
-        if( entity instanceof Wall || entity instanceof Brick ) {
+        if( entity instanceof Wall || entity instanceof Brick || entity instanceof Bomb ) {
             while ( this.isCollide(entity) ){
                 if (dir == LEFT) dir = RIGHT;
                 else if (dir == RIGHT) dir = LEFT;
@@ -48,8 +47,6 @@ public class Balloom extends Monster {
                 break;
             }
         }
-
-
     }
 
     public void move() {
@@ -74,7 +71,6 @@ public class Balloom extends Monster {
             countdownSecond--;
         }
         else {
-            img = null;
             removeList.add(this);
         }
     }
