@@ -92,7 +92,6 @@ public class Bomber extends Entity {
         if( entity instanceof FlameItem && this.isCollide(entity) ) {
             Bomb.flameLength++;
             Game.removeList.add(entity);
-            System.out.println("WTF");
         }
 
         if( entity instanceof SpeedItem && this.isCollide(entity) ) {
