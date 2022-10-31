@@ -3,8 +3,6 @@ package entities;
 import graphics.Sprite;
 import javafx.scene.image.Image;
 
-import Bomber.Game;
-
 import java.util.*;
 
 import static Bomber.Game.*;
@@ -13,7 +11,7 @@ public class Oneal extends Monster {
     private long IntervalChangeDirection = 2100000000;
     private long lastChangeDirection = 0;
 
-    private int countdown = Sprite.SCALED_SIZE;
+    private int countdown = 0;
 
     public Oneal(int x, int y, Image img) {
         super( x, y, img);
@@ -39,14 +37,22 @@ public class Oneal extends Monster {
         return (x + 16 + Sprite.SCALED_SIZE - 1) / Sprite.SCALED_SIZE - 1;
     }
 
-    private boolean checkGrid(int u, int v) {
-        if (u < 0 || v < 0 || u >= WIDTH || v >= HEIGHT) {
+    private boolean checkGrid(int block_x, int block_y) {
+        if (block_x < 0 || block_y < 0 || block_x >= WIDTH || block_y >= HEIGHT) {
             return false;
         }
 
-        Monster temp = new Monster(u, v, null);
+        Monster temp = new Monster(block_x, block_y, null);
 
         for (Entity entity : entities) {
+            if (entity instanceof Brick || entity instanceof Wall) {
+                if (temp.isCollide(entity)) {
+                    return false;
+                }
+            }
+        }
+
+        for (Entity entity : stillObjects) {
             if (entity instanceof Brick || entity instanceof Wall) {
                 if (temp.isCollide(entity)) {
                     return false;
@@ -61,6 +67,8 @@ public class Oneal extends Monster {
         if (countdown != 0) {
             return;
         }
+
+        countdown = Sprite.SCALED_SIZE;
 
         LinkedList<Pair> queue = new LinkedList<>();
         boolean[][] color = new boolean[2 * WIDTH][2 * HEIGHT];
@@ -105,7 +113,7 @@ public class Oneal extends Monster {
             }
         }
 
-        countdown = Sprite.SCALED_SIZE;
+        System.err.println(block(this.x) + " " + block(this.y));
 
         if (preMove[block(this.x)][block(this.y)] != -1) {
             direct = preMove[block(this.x)][block(this.y)];
