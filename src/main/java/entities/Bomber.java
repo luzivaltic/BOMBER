@@ -12,7 +12,7 @@ import java.util.List;
 import Bomber.Game;
 public class Bomber extends Entity {
 
-    public static final int STEP_SIZE = 7;
+    public static int STEP_SIZE = 7;
     public int dir;
     public boolean pressed = false;
     public boolean upPressed = false , downPressed = false , leftPressed = false , rightPressed = false , spacePressed = false;
@@ -87,6 +87,22 @@ public class Bomber extends Entity {
                     y -= DIR_Y[dir];
                 }
             }
+        }
+
+        if( entity instanceof FlameItem && this.isCollide(entity) ) {
+            Bomb.flameLength++;
+            Game.removeList.add(entity);
+            System.out.println("WTF");
+        }
+
+        if( entity instanceof SpeedItem && this.isCollide(entity) ) {
+            Bomber.STEP_SIZE ++;
+            Game.removeList.add(entity);
+        }
+
+        if( entity instanceof BombItem && this.isCollide(entity) ) {
+            Bomb.bombCapacity++;
+            Game.removeList.add(entity);
         }
     }
 

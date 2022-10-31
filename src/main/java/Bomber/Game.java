@@ -70,7 +70,9 @@ public class Game extends Application {
                     case SPACE :
                         int bomber_block_x = ( bomber.x - 16 ) / 32 + 1;
                         int bomber_block_y = ( bomber.y - 16 ) / 32 + 1;
-                        entities.add( new Bomb(bomber_block_x , bomber_block_y , Sprite.bomb.getFxImage() ) );
+                        if( Bomb.bombCount < Bomb.bombCapacity ) {
+                            entities.add(new Bomb(bomber_block_x, bomber_block_y, Sprite.bomb.getFxImage()));
+                        }
                         break;
                     case Q: System.exit(1); break;
                 }
@@ -106,17 +108,17 @@ public class Game extends Application {
                     case '1': entities.add(new Balloom(j, i, Sprite.balloom_right1.getFxImage())); break;
                     case '2': entities.add(new Oneal(j, i, Sprite.oneal_right1.getFxImage())); break;
                     case 'f': {
-                        stillObjects.add(new FlameItem(j, i, Sprite.powerup_flames.getFxImage()));
+                        entities.add(new FlameItem(j, i, Sprite.powerup_flames.getFxImage()));
                         entities.add(new Brick(j, i, Sprite.brick.getFxImage()));
                         break;
                     }
                     case 's': {
-                        stillObjects.add(new SpeedItem(j, i, Sprite.powerup_speed.getFxImage()));
+                        entities.add(new SpeedItem(j, i, Sprite.powerup_speed.getFxImage()));
                         entities.add(new Brick(j, i, Sprite.brick.getFxImage()));
                         break;
                     }
                     case 'b': {
-                        stillObjects.add(new BombItem(j, i, Sprite.powerup_bombs.getFxImage()));
+                        entities.add(new BombItem(j, i, Sprite.powerup_bombs.getFxImage()));
                         entities.add(new Brick(j, i, Sprite.brick.getFxImage()));
                         break;
                     }

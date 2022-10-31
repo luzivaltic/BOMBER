@@ -13,10 +13,13 @@ public class Bomb extends Entity {
     public static int flameLength = 1;
     public List<Flame> curFlame;
     public boolean getOut = false;
+    public static int bombCapacity = 2;
+    public static int bombCount;
     public Bomb(int x, int y, Image img) {
         super(x, y, img);
         timeLimit = System.nanoTime() + 2000000000;
         curFlame = new ArrayList<>();
+        bombCount++;
     }
 
     @Override
@@ -32,6 +35,7 @@ public class Bomb extends Entity {
         if( System.nanoTime() > timeLimit + 500000000 ) {
             Game.removeList.add(this);
             Game.removeList.addAll( curFlame );
+            bombCount--;
         }
     }
 
@@ -180,6 +184,9 @@ public class Bomb extends Entity {
                         if( (entity instanceof Bomber || entity instanceof  Monster ) &&
                                 flame.isCollide(entity) ) {
                             entity.setDead();
+                        }
+                        if( entity instanceof Bomb && flame.isCollide(entity) ) {
+                            ((Bomb) entity).timeLimit = System.nanoTime();
                         }
                     }
                 }

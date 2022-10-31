@@ -51,6 +51,10 @@ public class Oneal extends Monster {
         }
     }
 
+    int block(int number) {
+        return number;
+    }
+
     private void findBomber() {
         int[][] distance = new int[WIDTH * Sprite.SCALED_SIZE][HEIGHT * Sprite.SCALED_SIZE];
         distance[bomber.x][bomber.y] = 2;
@@ -94,6 +98,8 @@ public class Oneal extends Monster {
 
         x += DIR_X[direct];
         y += DIR_Y[direct];
+
+
     }
 
     public void dead() {
