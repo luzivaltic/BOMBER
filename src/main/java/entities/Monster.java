@@ -17,10 +17,6 @@ public class Monster extends Entity {
     }
 
     public boolean isDead() {
-        if (this.isCollide(bomber)) {
-            isDead = true;
-        }
-
         return isDead;
     }
 

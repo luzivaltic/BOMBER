@@ -36,6 +36,15 @@ public class Game extends Application {
         Application.launch(Game.class);
     }
 
+    public static class Pair {
+        public int x;
+        public int y;
+        public Pair(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
         // Tao Canvas
