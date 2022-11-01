@@ -12,12 +12,15 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import entities.*;
 import graphics.Sprite;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,16 +40,17 @@ public class Game extends Application {
     public static Label labelLife = new Label();
     public static Label labelStage = new Label();
     public static Label messageState = new Label();
+    public static Image image;
+    public static ImageView imageView;
 
     private long Interval = 1000000000 / FPS;
     private long lastUpdate = 0;
+    private int countdown = 20;
     public static int numberOfMonster = 0;
     public static int bomberLifeRemain = 3;
-    public static String gameState = "continue";
-    public static boolean gameStart = false;
+    public static String gameState = "Menu";
     public static Bomber bomber;
-    public static Menu menu;
-    public static int idLevel = 0;
+    public static int idLevel = 3;
     public static int limitLevel = 5;
     public static String level[] = {
             "src/main/resources/level1.txt",
@@ -105,19 +109,19 @@ public class Game extends Application {
             @Override
             public void handle(KeyEvent keyEvent) {
                 switch ( keyEvent.getCode() ) {
-                    case UP : gameStart = true; bomber.upPressed = false ; break;
-                    case DOWN : gameStart = true; bomber.downPressed = false; break;
-                    case RIGHT : gameStart = true; bomber.rightPressed = false; break;
-                    case LEFT : gameStart = true; bomber.leftPressed = false; break;
+                    case UP : bomber.upPressed = false ; break;
+                    case DOWN : bomber.downPressed = false; break;
+                    case RIGHT : bomber.rightPressed = false; break;
+                    case LEFT : bomber.leftPressed = false; break;
+                    case S : if (gameState == "Menu") gameState = "Load Stage"; break;
                     case SPACE :
-                        gameStart = true;
                         int bomber_block_x = ( bomber.x - 16 ) / 32 + 1;
                         int bomber_block_y = ( bomber.y - 16 ) / 32 + 1;
                         if( Bomb.bombCount < Bomb.bombCapacity ) {
                             entities.add(new Bomb(bomber_block_x, bomber_block_y, Sprite.bomb.getFxImage()));
                         }
                         break;
-                    case Q: gameStart = true; System.exit(1); break;
+                    case Q: System.exit(1); break;
                 }
             }
         });
@@ -125,18 +129,11 @@ public class Game extends Application {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
-                    render_update();
+                //buildMenu();
+                render_update();
             }
         };
         timer.start();
-
-        gameStart = true;
-        if (gameStart == false) {
-            menu.loadMenu();
-        } else {
-            createMap();
-            buildEntities();
-        }
 
         stage.setScene(scene);
         stage.show();
@@ -212,7 +209,44 @@ public class Game extends Application {
 
     int count = 0;
     long pre_count = 0;
+
+    public void buildMenu() {
+        if (gameState == "Menu") {
+            try {
+                image = new Image(new FileInputStream("src/main/resources/menu.jpg"));
+                imageView = new ImageView(image);
+                imageView.setX(0);
+                imageView.setY(0);
+                imageView.setFitWidth(WIDTH * Sprite.SCALED_SIZE);
+                imageView.setFitHeight(HEIGHT * Sprite.SCALED_SIZE);
+                //root.getChildren().add(imageView);
+            } catch (Exception e) {};
+        } else if (gameState == "Load Stage") {
+            if (countdown != 0) {
+                Label currentStage = new Label("Stage " + String.valueOf(idLevel + 1));
+                currentStage.setFont(new Font(23));
+                currentStage.setLayoutX(300);
+                currentStage.setLayoutY(300);
+                root.getChildren().add(currentStage);
+                countdown--;
+            } else {
+                if (idLevel == 0) {
+                    gameState = "Start";
+                }
+            }
+        } else if (gameState == "Start"){
+            createMap();
+            buildEntities();
+            gameState = "continue";
+        }
+    }
+
     public void render_update() {
+        System.err.println(gameState);
+        //if (gameState != "continue") {
+        //    return;
+        //}
+
         root.getChildren().remove(labelLife);
         root.getChildren().remove(labelStage);
         // Tao text HP
@@ -231,7 +265,7 @@ public class Game extends Application {
 
         root.getChildren().addAll(labelLife, labelStage);
 
-        if (gameState != "continue") {
+        if (bomberLifeRemain == 0) {
             return;
         }
 
