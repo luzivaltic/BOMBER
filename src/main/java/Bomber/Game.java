@@ -138,9 +138,9 @@ public class Game extends Application {
                         case 'p':
                             bomber = new Bomber(j, i, Sprite.player_right.getFxImage());
                             break;
-                        //case '1': numberOfMonster++; entities.add(new Balloom(j, i, Sprite.balloom_right1.getFxImage())); break;
-                        //case '2': numberOfMonster++; entities.add(new Oneal(j, i, Sprite.oneal_right1.getFxImage())); break;
-                        //case '3': numberOfMonster++; entities.add(new Kondoria(j, i, Sprite.kondoria_right1.getFxImage())); break;
+                        case '1': numberOfMonster++; entities.add(new Balloom(j, i, Sprite.balloom_right1.getFxImage())); break;
+                        case '2': numberOfMonster++; entities.add(new Oneal(j, i, Sprite.oneal_right1.getFxImage())); break;
+                        case '3': numberOfMonster++; entities.add(new Kondoria(j, i, Sprite.kondoria_right1.getFxImage())); break;
                         case 'f': {
                             entities.add(new FlameItem(j, i, Sprite.powerup_flames.getFxImage()));
                             entities.add(new Brick(j, i, Sprite.brick.getFxImage()));
