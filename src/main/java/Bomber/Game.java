@@ -56,7 +56,7 @@ public class Game extends Application {
     public static Bomber bomber;
     public static File bomb_bang , backgroundMusic , bomber_die , enemy_die, item ;
     public static Menu menu;
-    public static int idLevel = 0;
+    public static int idLevel = 2;
     public static int limitLevel = 5;
     public static String level[] = {
             "src/main/resources/level1.txt",
