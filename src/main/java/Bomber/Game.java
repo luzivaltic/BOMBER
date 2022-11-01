@@ -47,11 +47,13 @@ public class Game extends Application {
     public static Bomber bomber;
     public static Menu menu;
     public static int idLevel = 0;
-    public static int limitLevel = 3;
+    public static int limitLevel = 5;
     public static String level[] = {
             "src/main/resources/level1.txt",
             "src/main/resources/level2.txt",
             "src/main/resources/level3.txt",
+            "src/main/resources/level4.txt",
+            "src/main/resources/level5.txt",
     };
 
     public static void main(String[] args) {
@@ -143,6 +145,7 @@ public class Game extends Application {
     public static void buildEntities() {
         try {
             File file = new File(level[idLevel]);
+            //File file = new File(level[idLevel]);
             Scanner scanner = new Scanner(file);
 
             for (int i = 0; i < HEIGHT; i++) {
@@ -156,7 +159,9 @@ public class Game extends Application {
                             break;
                         case '1': numberOfMonster++; entities.add(new Balloom(j, i, Sprite.balloom_right1.getFxImage())); break;
                         case '2': numberOfMonster++; entities.add(new Oneal(j, i, Sprite.oneal_right1.getFxImage())); break;
-                        case '3': numberOfMonster++; entities.add(new Kondoria(j, i, Sprite.kondoria_right1.getFxImage())); break;
+                        case '3': numberOfMonster++; entities.add(new Minvo(j, i, Sprite.minvo_right1.getFxImage())); break;
+                        case '4': numberOfMonster++; entities.add(new Doll(j, i, Sprite.doll_right1.getFxImage())); break;
+                        case '5': numberOfMonster++; entities.add(new Kondoria(j, i, Sprite.kondoria_right1.getFxImage())); break;
                         case 'f': {
                             entities.add(new FlameItem(j, i, Sprite.powerup_flames.getFxImage()));
                             entities.add(new Brick(j, i, Sprite.brick.getFxImage()));
