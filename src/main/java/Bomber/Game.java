@@ -22,9 +22,18 @@ import graphics.Sprite;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Game extends Application {
     public static final int WIDTH = 31;
@@ -50,7 +59,8 @@ public class Game extends Application {
     public static int bomberLifeRemain = 3;
     public static String gameState = "Menu";
     public static Bomber bomber;
-    public static int idLevel = 3;
+    public static File bomb_bang , backgroundMusic , bomber_die , enemy_die, item ;
+    public static int idLevel = 0;
     public static int limitLevel = 5;
     public static String level[] = {
             "src/main/resources/level1.txt",
@@ -79,6 +89,12 @@ public class Game extends Application {
         }
     }
 
+    public static void play_wav(File file) {
+        Media media = new Media(file.toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.play();
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
         // Tao Canvas
@@ -92,7 +108,13 @@ public class Game extends Application {
 
         Scene scene = new Scene(root);
         root.getChildren().add(canvas);
+        stage.setTitle("BomberMan");
 
+        bomb_bang = new File("bomb_bang.wav");
+        backgroundMusic = new File("rise.mp4");
+        bomber_die = new File("bomber_die.wav");
+        enemy_die = new File("enemy_die.wav");
+        item = new File("item.wav");
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent keyEvent) {
@@ -126,11 +148,15 @@ public class Game extends Application {
             }
         });
 
+        Media media = new Media(backgroundMusic.toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setCycleCount(1000000);
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
-                //buildMenu();
-                render_update();
+
+                    render_update();
+                    mediaPlayer.play();
             }
         };
         timer.start();
