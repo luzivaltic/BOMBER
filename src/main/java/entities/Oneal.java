@@ -8,7 +8,7 @@ import java.util.*;
 import static Bomber.Game.*;
 
 public class Oneal extends Monster {
-    private long IntervalChangeDirection = 2100000000;
+    private final long IntervalChangeDirection = 2100000000;
     private long lastChangeDirection = 0;
 
     private int countdown = 0;
@@ -37,7 +37,7 @@ public class Oneal extends Monster {
         return (x + 16 + Sprite.SCALED_SIZE - 1) / Sprite.SCALED_SIZE - 1;
     }
 
-    private boolean checkGrid(int block_x, int block_y) {
+    public boolean checkGrid(int block_x, int block_y) {
         if (block_x < 0 || block_y < 0 || block_x >= WIDTH || block_y >= HEIGHT) {
             return false;
         }
@@ -64,11 +64,8 @@ public class Oneal extends Monster {
     }
 
     private void findBomber() {
-        if (countdown != 0) {
-            return;
-        }
-
-        countdown = Sprite.SCALED_SIZE;
+        if (countdown != 0) { return; }
+        else countdown = Sprite.SCALED_SIZE;
 
         LinkedList<Pair> queue = new LinkedList<>();
         boolean[][] color = new boolean[2 * WIDTH][2 * HEIGHT];
@@ -141,8 +138,6 @@ public class Oneal extends Monster {
 
         x += DIR_X[direct];
         y += DIR_Y[direct];
-
-
     }
 
     public void dead() {
@@ -152,6 +147,7 @@ public class Oneal extends Monster {
         }
         else {
             img = null;
+            numberOfMonster--;
             removeList.add(this);
         }
     }

@@ -10,11 +10,14 @@ import graphics.Sprite;
 import java.awt.*;
 import Bomber.Game;
 
+import static Bomber.Game.*;
+import static Bomber.Game.stillObjects;
+
 public abstract class Entity {
     public static final int UP = 0, DOWN = 1 , LEFT = 2 , RIGHT = 3;
     public static final int[] DIR_X = { 0 , 0 , -1 , 1 };
     public static final int[] DIR_Y = { -1 , 1 , 0 , 0 };
-    public long IntervalSpriteChange = 1000000000 / 12;
+    public long IntervalSpriteChange = 1000000000 / 6;
     public int spriteCount = 0;
     public long lastSpriteChange = 0;
 

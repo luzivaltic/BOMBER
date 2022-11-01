@@ -10,7 +10,7 @@ import static Bomber.Game.bomber;
 
 public class Monster extends Entity {
     public int direct;
-    public long countdownSecond = 10;
+    public long countdownSecond = 20;
 
     public Monster(int x, int y, Image img) {
         super( x, y, img);

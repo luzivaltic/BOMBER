@@ -13,13 +13,13 @@ import static Bomber.Game.*;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Balloom extends Monster {
+public class Minvo extends Monster {
     private int dir = 0;
     private int lastMove = -1;
     private long IntervalChangeDirection = 2100000000;
     private long lastChangeDirection = 0;
 
-    public Balloom(int x, int y, Image img) {
+    public Minvo(int x, int y, Image img) {
         super( x, y, img);
         dir = getDirection();
     }
@@ -69,7 +69,7 @@ public class Balloom extends Monster {
         Monster temp = new Monster(block_x, block_y, null);
 
         for (Entity entity : entities) {
-            if (entity instanceof Brick || entity instanceof Wall || entity instanceof Bomb) {
+            if (entity instanceof Brick || entity instanceof Wall) {
                 if (temp.isCollide(entity)) {
                     return false;
                 }
@@ -77,7 +77,7 @@ public class Balloom extends Monster {
         }
 
         for (Entity entity : stillObjects) {
-            if (entity instanceof Brick || entity instanceof Wall || entity instanceof Bomb) {
+            if (entity instanceof Brick || entity instanceof Wall) {
                 if (temp.isCollide(entity)) {
                     return false;
                 }
@@ -89,14 +89,14 @@ public class Balloom extends Monster {
 
     public void move() {
         if (dir == LEFT) {
-            if (spriteCount == 0) img = Sprite.balloom_left1.getFxImage();
-            else if (spriteCount == 1) img = Sprite.balloom_left2.getFxImage();
-            else if (spriteCount == 2) img = Sprite.balloom_left3.getFxImage();
+            if (spriteCount == 0) img = Sprite.minvo_left1.getFxImage();
+            else if (spriteCount == 1) img = Sprite.minvo_left2.getFxImage();
+            else if (spriteCount == 2) img = Sprite.minvo_left3.getFxImage();
         }
         else {
-            if (spriteCount == 0) img = Sprite.balloom_right1.getFxImage();
-            else if (spriteCount == 1) img = Sprite.balloom_right2.getFxImage();
-            else if (spriteCount == 2) img = Sprite.balloom_right3.getFxImage();
+            if (spriteCount == 0) img = Sprite.minvo_right1.getFxImage();
+            else if (spriteCount == 1) img = Sprite.minvo_right2.getFxImage();
+            else if (spriteCount == 2) img = Sprite.minvo_right3.getFxImage();
         }
 
         if (x == block(x) * Sprite.SCALED_SIZE && y == block(y) * Sprite.SCALED_SIZE) {
@@ -113,7 +113,7 @@ public class Balloom extends Monster {
 
     public void dead() {
         if (countdownSecond != 0) {
-            if (countdownSecond > 10) img = Sprite.balloom_dead.getFxImage();
+            if (countdownSecond > 10) img = Sprite.minvo_dead.getFxImage();
             else if (countdownSecond > 8) img = Sprite.mob_dead1.getFxImage();
             else if (countdownSecond > 3) img = Sprite.mob_dead2.getFxImage();
             else img = Sprite.mob_dead3.getFxImage();
