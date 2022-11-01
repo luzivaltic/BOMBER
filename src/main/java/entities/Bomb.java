@@ -77,6 +77,7 @@ public class Bomb extends Entity {
             if( !exceededTimeLimit ) {
                 exceededTimeLimit = true;
                 spriteCount = 0;
+                Game.play_wav( Game.bomb_bang );
                 // left
                 boolean noLeft = false;
                 for(int i = 0 ; i < flameLength - 1; i++) {
@@ -101,7 +102,6 @@ public class Bomb extends Entity {
                         curFlame.add(newFlame);
                     }
                 }
-
                 // right
                 boolean noRight = false;
                 for(int i = 0 ; i < flameLength - 1; i++) {
@@ -116,7 +116,6 @@ public class Bomb extends Entity {
                     }
                     curFlame.add( newFlame );
                 }
-
                 if( !noRight ) {
                     Sprite[] newFlameSprite = new_flame_sprite(
                             Sprite.explosion_horizontal_right_last ,
@@ -184,6 +183,7 @@ public class Bomb extends Entity {
                         if( (entity instanceof Bomber || entity instanceof  Monster ) &&
                                 flame.isCollide(entity) ) {
                             entity.setDead();
+                            Game.play_wav( Game.enemy_die );
                         }
                         if( entity instanceof Bomb && flame.isCollide(entity) ) {
                             ((Bomb) entity).timeLimit = System.nanoTime();

@@ -14,9 +14,18 @@ import graphics.Sprite;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Game extends Application {
     public static final int WIDTH = 31;
@@ -31,6 +40,7 @@ public class Game extends Application {
     private long Interval = 1000000000 / FPS;
     private long lastUpdate = 0;
     public static Bomber bomber;
+    public static File bomb_bang , backgroundMusic , bomber_die , enemy_die, item ;
 
     public static void main(String[] args) {
         Application.launch(Game.class);
@@ -45,6 +55,12 @@ public class Game extends Application {
         }
     }
 
+    public static void play_wav(File file) {
+        Media media = new Media(file.toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.play();
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
         // Tao Canvas
@@ -55,7 +71,13 @@ public class Game extends Application {
         Group root = new Group();
         Scene scene = new Scene(root);
         root.getChildren().add(canvas);
+        stage.setTitle("BomberMan");
 
+        bomb_bang = new File("bomb_bang.wav");
+        backgroundMusic = new File("rise.mp4");
+        bomber_die = new File("bomber_die.wav");
+        enemy_die = new File("enemy_die.wav");
+        item = new File("item.wav");
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent keyEvent) {
@@ -88,10 +110,14 @@ public class Game extends Application {
             }
         });
 
+        Media media = new Media(backgroundMusic.toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setCycleCount(1000000);
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
                     render_update();
+                    mediaPlayer.play();
             }
         };
         timer.start();

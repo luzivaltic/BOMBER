@@ -41,10 +41,14 @@ public class Bomber extends Entity {
         endAnimation = System.nanoTime() + IntervalSpriteChange * 3;
         spriteCount = 0;
         lastSpriteChange = System.nanoTime();
+        Game.play_wav( Game.bomber_die );
     }
 
     @Override
     public void collideHandler(Entity entity) {
+        if( System.nanoTime() - this.endAnimation < 2000000000 && ( entity instanceof Monster || entity instanceof Bomb ) ){
+            return;
+        }
         if( entity instanceof Wall || entity instanceof Brick ) {
             if( this.isCollide(entity) ) {
                 int curX = x , curY = y;
@@ -56,8 +60,7 @@ public class Bomber extends Entity {
                         break;
                     }
                 }
-                if(!fixCollide)
-                {
+                if(!fixCollide) {
                     this.x = curX;
                     for(int i = -5; i <= 5; i++) {
                         this.y = curY + i;
@@ -87,6 +90,10 @@ public class Bomber extends Entity {
                     y -= DIR_Y[dir];
                 }
             }
+        }
+
+        if( entity instanceof Item ) {
+
         }
 
         if( entity instanceof FlameItem && this.isCollide(entity) ) {
