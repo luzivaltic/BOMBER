@@ -10,6 +10,8 @@ import javafx.scene.paint.Color;
 import java.awt.*;
 import java.util.List;
 import Bomber.Game;
+import static Bomber.Game.*;
+
 public class Bomber extends Entity {
 
     public static int STEP_SIZE = 7;
@@ -27,7 +29,9 @@ public class Bomber extends Entity {
     private boolean moved = false;
     @Override
     public void update() {
-        if( isDead ) dead();
+        if( isDead ) {
+            dead();
+        }
         else {
             move();
             collide();
@@ -146,10 +150,13 @@ public class Bomber extends Entity {
         else if( spriteCount == 2 ) img = Sprite.player_dead3.getFxImage();
 
         if( endAnimation < System.nanoTime() ) {
-            isDead = false;
-            x = Sprite.SCALED_SIZE;
-            y = Sprite.SCALED_SIZE;
-            img = Sprite.player_right.getFxImage();
+            if (bomberLifeRemain > 1) {
+                isDead = false;
+                x = Sprite.SCALED_SIZE;
+                y = Sprite.SCALED_SIZE;
+                img = Sprite.player_right.getFxImage();
+            }
+            bomberLifeRemain--;
         }
     }
 

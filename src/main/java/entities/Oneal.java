@@ -68,6 +68,7 @@ public class Oneal extends Monster {
             return;
         }
 
+        // countdown time pass 1 pixel with a direction
         countdown = Sprite.SCALED_SIZE;
 
         LinkedList<Pair> queue = new LinkedList<>();
@@ -152,6 +153,7 @@ public class Oneal extends Monster {
         }
         else {
             img = null;
+            numberOfMonster--;
             removeList.add(this);
         }
     }

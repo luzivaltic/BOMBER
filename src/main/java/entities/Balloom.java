@@ -67,10 +67,14 @@ public class Balloom extends Monster {
 
     public void dead() {
         if (countdownSecond != 0) {
-            img = Sprite.balloom_dead.getFxImage();
+            if (countdownSecond > 10) img = Sprite.balloom_dead.getFxImage();
+            else if (countdownSecond > 8) img = Sprite.mob_dead1.getFxImage();
+            else if (countdownSecond > 3) img = Sprite.mob_dead2.getFxImage();
+            else img = Sprite.mob_dead3.getFxImage();
             countdownSecond--;
         }
         else {
+            numberOfMonster--;
             removeList.add(this);
         }
     }

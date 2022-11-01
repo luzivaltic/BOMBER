@@ -3,8 +3,7 @@ package entities;
 import graphics.Sprite;
 import javafx.scene.image.Image;
 
-import static Bomber.Game.bomber;
-import static Bomber.Game.removeList;
+import static Bomber.Game.*;
 
 public class Kondoria extends Monster {
     private long IntervalChangeDirection = 2100000000;
@@ -57,6 +56,7 @@ public class Kondoria extends Monster {
         }
         else {
             img = null;
+            numberOfMonster--;
             removeList.add(this);
         }
     }
