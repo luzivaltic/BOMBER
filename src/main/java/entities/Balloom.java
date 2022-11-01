@@ -12,15 +12,14 @@ import static Bomber.Game.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Balloom extends Monster {
-    private int dir;
+    private int dir = 0;
+    private int lastMove = -1;
     private long IntervalChangeDirection = 2100000000;
     private long lastChangeDirection = 0;
 
     public Balloom(int x, int y, Image img) {
         super( x, y, img);
-        int randNum = ThreadLocalRandom.current().nextInt(0,  2);
-        if (randNum == 0) dir = LEFT;
-        else dir = RIGHT;
+        dir = ThreadLocalRandom.current().nextInt(0,  5);
     }
 
     @Override
@@ -30,23 +29,39 @@ public class Balloom extends Monster {
         }
         else {
             move();
-            collide();
         }
 
         spriteChange();
     }
 
-    public void collideHandler(Entity entity) {
-        if( entity instanceof Wall || entity instanceof Brick || entity instanceof Bomb ) {
-            while ( this.isCollide(entity) ){
-                if (dir == LEFT) dir = RIGHT;
-                else if (dir == RIGHT) dir = LEFT;
+    public int block(int x) {
+        return (x + 16 + Sprite.SCALED_SIZE - 1) / Sprite.SCALED_SIZE - 1;
+    }
 
-                x += DIR_X[dir];
-                y += DIR_Y[dir];
-                break;
+    public boolean checkGrid(int block_x, int block_y) {
+        if (block_x < 0 || block_y < 0 || block_x >= WIDTH || block_y >= HEIGHT) {
+            return false;
+        }
+
+        Monster temp = new Monster(block_x, block_y, null);
+
+        for (Entity entity : entities) {
+            if (entity instanceof Brick || entity instanceof Wall || entity instanceof Bomb) {
+                if (temp.isCollide(entity)) {
+                    return false;
+                }
             }
         }
+
+        for (Entity entity : stillObjects) {
+            if (entity instanceof Brick || entity instanceof Wall || entity instanceof Bomb) {
+                if (temp.isCollide(entity)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     public void move() {
@@ -59,6 +74,29 @@ public class Balloom extends Monster {
             if (spriteCount == 0) img = Sprite.balloom_right1.getFxImage();
             else if (spriteCount == 1) img = Sprite.balloom_right2.getFxImage();
             else if (spriteCount == 2) img = Sprite.balloom_right3.getFxImage();
+        }
+
+        if (x == block(x) * Sprite.SCALED_SIZE && y == block(y) * Sprite.SCALED_SIZE) {
+            int u = block(x);
+            int v = block(y);
+            if (checkGrid(u + DIR_X[dir], v + DIR_Y[dir]) == false) {
+                int order = ThreadLocalRandom.current().nextInt(0, 2);
+                if (order == 0) {
+                    for (int i = 0; i < 4; ++i) {
+                        if (checkGrid(u + DIR_X[i], v + DIR_Y[i]) == true) {
+                            dir = i;
+                            break;
+                        }
+                    }
+                } else {
+                    for (int i = 3; i >= 0; --i) {
+                        if (checkGrid(u + DIR_X[i], v + DIR_Y[i]) == true) {
+                            dir = i;
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         x += DIR_X[dir];

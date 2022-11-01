@@ -155,6 +155,8 @@ public class Bomber extends Entity {
                 x = Sprite.SCALED_SIZE;
                 y = Sprite.SCALED_SIZE;
                 img = Sprite.player_right.getFxImage();
+            } else {
+                gameState = "Game is over ! You are the loser !";
             }
             bomberLifeRemain--;
         }

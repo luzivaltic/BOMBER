@@ -25,6 +25,8 @@ public class Portal extends Entity {
                     ++idLevel;
                     createMap();
                     buildEntities();
+                } else if (idLevel == limitLevel - 1) {
+                    gameState = "Game is over ! You are the winner !";
                 }
             }
         }

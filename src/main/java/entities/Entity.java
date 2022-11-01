@@ -10,6 +10,9 @@ import graphics.Sprite;
 import java.awt.*;
 import Bomber.Game;
 
+import static Bomber.Game.*;
+import static Bomber.Game.stillObjects;
+
 public abstract class Entity {
     public static final int UP = 0, DOWN = 1 , LEFT = 2 , RIGHT = 3;
     public static final int[] DIR_X = { 0 , 0 , -1 , 1 };

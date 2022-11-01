@@ -33,15 +33,19 @@ public class Game extends Application {
     public static List<Entity> stillObjects = new ArrayList<>();
     public static List<Entity> removeList = new ArrayList<>();
     public static List<Entity> addList = new ArrayList<>();
+    public static Group root = new Group();
+    public static Label labelLife = new Label();
+    public static Label labelStage = new Label();
+    public static Label messageState = new Label();
+
     private long Interval = 1000000000 / FPS;
     private long lastUpdate = 0;
     public static int numberOfMonster = 0;
     public static int bomberLifeRemain = 3;
+    public static String gameState = "continue";
+    public static boolean gameStart = false;
     public static Bomber bomber;
-    public static Group root = new Group();
-    public static Label labelLife = new Label();
-    public static Label labelStage = new Label();
-
+    public static Menu menu;
     public static int idLevel = 0;
     public static int limitLevel = 3;
     public static String level[] = {
@@ -60,6 +64,12 @@ public class Game extends Application {
         public Pair(int x, int y) {
             this.x = x;
             this.y = y;
+        }
+
+        public int distance(Pair other) {
+            int d = (x - other.x) * (x - other.x);
+            int e = (y - other.y) * (y - other.y);
+            return (int)Math.sqrt(d + e);
         }
     }
 
@@ -93,18 +103,19 @@ public class Game extends Application {
             @Override
             public void handle(KeyEvent keyEvent) {
                 switch ( keyEvent.getCode() ) {
-                    case UP : bomber.upPressed = false ; break;
-                    case DOWN : bomber.downPressed = false; break;
-                    case RIGHT : bomber.rightPressed = false; break;
-                    case LEFT : bomber.leftPressed = false; break;
+                    case UP : gameStart = true; bomber.upPressed = false ; break;
+                    case DOWN : gameStart = true; bomber.downPressed = false; break;
+                    case RIGHT : gameStart = true; bomber.rightPressed = false; break;
+                    case LEFT : gameStart = true; bomber.leftPressed = false; break;
                     case SPACE :
+                        gameStart = true;
                         int bomber_block_x = ( bomber.x - 16 ) / 32 + 1;
                         int bomber_block_y = ( bomber.y - 16 ) / 32 + 1;
                         if( Bomb.bombCount < Bomb.bombCapacity ) {
                             entities.add(new Bomb(bomber_block_x, bomber_block_y, Sprite.bomb.getFxImage()));
                         }
                         break;
-                    case Q: System.exit(1); break;
+                    case Q: gameStart = true; System.exit(1); break;
                 }
             }
         });
@@ -117,8 +128,13 @@ public class Game extends Application {
         };
         timer.start();
 
-        createMap();
-        buildEntities();
+        gameStart = true;
+        if (gameStart == false) {
+            menu.loadMenu();
+        } else {
+            createMap();
+            buildEntities();
+        }
 
         stage.setScene(scene);
         stage.show();
@@ -192,10 +208,9 @@ public class Game extends Application {
     int count = 0;
     long pre_count = 0;
     public void render_update() {
-        // Tao text HP
         root.getChildren().remove(labelLife);
         root.getChildren().remove(labelStage);
-
+        // Tao text HP
         String HP = String.valueOf(bomberLifeRemain);
         labelLife.setFont(new Font(23));
         labelLife.setText("Life : " + HP);
@@ -211,7 +226,7 @@ public class Game extends Application {
 
         root.getChildren().addAll(labelLife, labelStage);
 
-        if (bomberLifeRemain == 0) {
+        if (gameState != "continue") {
             return;
         }
 
