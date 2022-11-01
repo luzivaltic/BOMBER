@@ -23,6 +23,7 @@ public class Portal extends Entity {
             if (this.isCollide(entity)) {
                 if (idLevel < limitLevel - 1) {
                     ++idLevel;
+                    createMap();
                     buildEntities();
                 }
             }

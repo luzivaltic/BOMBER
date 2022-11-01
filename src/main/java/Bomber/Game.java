@@ -129,8 +129,6 @@ public class Game extends Application {
             File file = new File(level[idLevel]);
             Scanner scanner = new Scanner(file);
 
-            entities.clear();
-
             for (int i = 0; i < HEIGHT; i++) {
                 String readMap = scanner.nextLine();
 
@@ -140,9 +138,9 @@ public class Game extends Application {
                         case 'p':
                             bomber = new Bomber(j, i, Sprite.player_right.getFxImage());
                             break;
-                        case '1': numberOfMonster++; entities.add(new Balloom(j, i, Sprite.balloom_right1.getFxImage())); break;
-                        case '2': numberOfMonster++; entities.add(new Oneal(j, i, Sprite.oneal_right1.getFxImage())); break;
-                        case '3': numberOfMonster++; entities.add(new Kondoria(j, i, Sprite.kondoria_right1.getFxImage())); break;
+                        //case '1': numberOfMonster++; entities.add(new Balloom(j, i, Sprite.balloom_right1.getFxImage())); break;
+                        //case '2': numberOfMonster++; entities.add(new Oneal(j, i, Sprite.oneal_right1.getFxImage())); break;
+                        //case '3': numberOfMonster++; entities.add(new Kondoria(j, i, Sprite.kondoria_right1.getFxImage())); break;
                         case 'f': {
                             entities.add(new FlameItem(j, i, Sprite.powerup_flames.getFxImage()));
                             entities.add(new Brick(j, i, Sprite.brick.getFxImage()));
@@ -158,7 +156,7 @@ public class Game extends Application {
                             entities.add(new Brick(j, i, Sprite.brick.getFxImage()));
                             break;
                         }
-                        case '#': entities.add(new Wall(j, i, Sprite.wall.getFxImage())); break;
+                        case '#': stillObjects.add(new Wall(j, i, Sprite.wall.getFxImage())); break;
                         case '*': entities.add(new Brick(j, i, Sprite.brick.getFxImage())); break;
                         case 'x': {
                             entities.add(new Portal(j, i, Sprite.portal.getFxImage()));
@@ -176,6 +174,9 @@ public class Game extends Application {
     }
 
     public static void createMap() {
+        entities.clear();
+        stillObjects.clear();
+
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
                 Entity object;
