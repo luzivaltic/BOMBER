@@ -3,6 +3,7 @@ package entities;
 import graphics.Sprite;
 import javafx.scene.image.Image;
 import Bomber.Game;
+import static entities.Bomb.*;
 import static Bomber.Game.*;
 
 public class Portal extends Entity {
@@ -18,12 +19,7 @@ public class Portal extends Entity {
         }
     }
 
-    void reset_bomber()
-    {
-        bomber = new Bomber( 1 , 1 , null);
-        Bomb.bombCapacity = 2;
-        Bomb.flameLength = 1;
-    }
+
 
     @Override
     public void collideHandler(Entity entity) {
@@ -31,11 +27,13 @@ public class Portal extends Entity {
             if (this.isCollide(entity)) {
                 if (idLevel < limitLevel - 1) {
                     ++idLevel;
-                    reset_bomber();
+                    resetBomber();
                     createMap();
                     buildEntities();
+                    gameState = "Load Stage";
+                    countdownStage = 50;
                 } else if (idLevel == limitLevel - 1) {
-                    gameState = "Game is over ! You are the winner !";
+                    gameState = "Game is over ! You win !";
                 }
             }
         }

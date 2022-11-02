@@ -152,13 +152,13 @@ public class Bomber extends Entity {
         else if( spriteCount == 2 ) img = Sprite.player_dead3.getFxImage();
 
         if( endAnimation < System.nanoTime() ) {
-            if (bomberLifeRemain > 1) {
+            if (bomberLifeRemain > 0) {
                 isDead = false;
                 x = Sprite.SCALED_SIZE;
                 y = Sprite.SCALED_SIZE;
                 img = Sprite.player_right.getFxImage();
             } else {
-                gameState = "Game is over ! You are the loser !";
+                gameState = "Game is over ! You lose !";
             }
             bomberLifeRemain--;
         }
