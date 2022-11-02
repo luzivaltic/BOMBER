@@ -8,32 +8,21 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Label;
-import javafx.stage.Stage;
 import entities.*;
 import graphics.Sprite;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
-
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Game extends Application {
     public static final int WIDTH = 31;
@@ -45,18 +34,21 @@ public class Game extends Application {
     public static List<Entity> stillObjects = new ArrayList<>();
     public static List<Entity> removeList = new ArrayList<>();
     public static List<Entity> addList = new ArrayList<>();
-    public static Group root = new Group();
-    public static Label labelLife = new Label();
-    public static Label labelStage = new Label();
-    public static Label messageState = new Label();
-    public static Image image;
-    public static ImageView imageView;
+    public Group root = new Group();
+    public Label labelLife = new Label();
+    public Label labelStage = new Label();
+    public Label labelMonster = new Label();
+    public Label currentStage = new Label();
+    public Label msg = new Label();
+    public Label restartMsg = new Label();
+    public Image image;
+    public ImageView imageView;
 
     private long Interval = 1000000000 / FPS;
     private long lastUpdate = 0;
-    private int countdown = 20;
+    public static int countdownStage = 0;
     public static int numberOfMonster = 0;
-    public static int bomberLifeRemain = 3;
+    public static int bomberLifeRemain = 5;
     public static String gameState = "Menu";
     public static Bomber bomber;
     public static File bomb_bang , backgroundMusic , bomber_die , enemy_die, item ;
@@ -130,12 +122,17 @@ public class Game extends Application {
         scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent keyEvent) {
+                if (keyEvent.getCode() != null) {
+                    if (gameState == "Menu") {
+                        gameState = "Load Stage";
+                        countdownStage = 50;
+                    }
+                }
                 switch ( keyEvent.getCode() ) {
                     case UP : bomber.upPressed = false ; break;
                     case DOWN : bomber.downPressed = false; break;
                     case RIGHT : bomber.rightPressed = false; break;
                     case LEFT : bomber.leftPressed = false; break;
-                    case S : if (gameState == "Menu") gameState = "Load Stage"; break;
                     case SPACE :
                         int bomber_block_x = ( bomber.x - 16 ) / 32 + 1;
                         int bomber_block_y = ( bomber.y - 16 ) / 32 + 1;
@@ -143,6 +140,9 @@ public class Game extends Application {
                             entities.add(new Bomb(bomber_block_x, bomber_block_y, Sprite.bomb.getFxImage()));
                         }
                         break;
+                    case P: if (gameState == "continue") gameState = "Pause"; break;
+                    case C: if (gameState == "Pause") gameState = "continue"; break;
+                    case R: gameRestart(); break;
                     case Q: System.exit(1); break;
                 }
             }
@@ -154,7 +154,6 @@ public class Game extends Application {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
-
                     render_update();
                     mediaPlayer.play();
             }
@@ -165,10 +164,25 @@ public class Game extends Application {
         stage.show();
     }
 
+    public static void resetBomber() {
+        bomber = new Bomber(1, 1, null);
+        Bomb.bombCapacity = 2;
+        Bomb.flameLength = 1;
+    }
+
+    public void gameRestart() {
+        entities.clear();
+        stillObjects.clear();
+        idLevel = 0;
+        numberOfMonster = 0;
+        bomberLifeRemain = 5;
+        resetBomber();
+        gameState = "Start";
+    }
+
     public static void buildEntities() {
         try {
             File file = new File(level[idLevel]);
-            //File file = new File(level[idLevel]);
             Scanner scanner = new Scanner(file);
 
             for (int i = 0; i < HEIGHT; i++) {
@@ -236,64 +250,147 @@ public class Game extends Application {
     int count = 0;
     long pre_count = 0;
 
-    public void buildMenu() {
+    public void render_update() {
+        if (gameState == "Game is over ! You lose !") {
+            root.getChildren().remove(msg);
+            root.getChildren().remove(restartMsg);
+
+            msg.setText(gameState);
+            msg.setFont(Font.font("Verdana", FontWeight.BOLD, 50));
+            msg.setLayoutX(180);
+            msg.setLayoutY(150);
+
+            restartMsg.setText("Press R to restart");
+            restartMsg.setFont(Font.font("Verdana", FontWeight.BOLD, 35));
+            restartMsg.setLayoutX(310);
+            restartMsg.setLayoutY(250);
+
+            root.getChildren().add(msg);
+            root.getChildren().add(restartMsg);
+            return;
+        } else {
+            root.getChildren().remove(msg);
+            root.getChildren().remove(restartMsg);
+        }
+
+        if (gameState == "Game is over ! You win !") {
+            root.getChildren().remove(msg);
+            root.getChildren().remove(restartMsg);
+
+            msg.setText(gameState);
+            msg.setFont(Font.font("Verdana", FontWeight.BOLD, 50));
+            msg.setLayoutX(180);
+            msg.setLayoutY(150);
+
+            restartMsg.setText("Press R to restart");
+            restartMsg.setFont(Font.font("Verdana", FontWeight.BOLD, 35));
+            restartMsg.setLayoutX(310);
+            restartMsg.setLayoutY(250);
+
+            root.getChildren().add(msg);
+            root.getChildren().add(restartMsg);
+            return;
+        } else {
+            root.getChildren().remove(msg);
+            root.getChildren().remove(restartMsg);
+        }
+
         if (gameState == "Menu") {
             try {
-                image = new Image(new FileInputStream("src/main/resources/menu.jpg"));
+                root.getChildren().remove(imageView);
+                root.getChildren().remove(msg);
+
+                image = new Image(new FileInputStream("src/main/resources/wallpaper.jpg"));
                 imageView = new ImageView(image);
+
                 imageView.setX(0);
                 imageView.setY(0);
+
                 imageView.setFitWidth(WIDTH * Sprite.SCALED_SIZE);
-                imageView.setFitHeight(HEIGHT * Sprite.SCALED_SIZE);
-                //root.getChildren().add(imageView);
+                imageView.setFitHeight((HEIGHT + 1) * Sprite.SCALED_SIZE);
+
+                root.getChildren().add(imageView);
+
+                msg.setText("Press any key to start and Q to quit !");
+                msg.setFont(Font.font("Verdana", FontWeight.BOLD, 35));
+                msg.setLayoutX(150);
+                msg.setLayoutY(150);
+
+                root.getChildren().add(msg);
             } catch (Exception e) {};
-        } else if (gameState == "Load Stage") {
-            if (countdown != 0) {
-                Label currentStage = new Label("Stage " + String.valueOf(idLevel + 1));
-                currentStage.setFont(new Font(23));
-                currentStage.setLayoutX(300);
-                currentStage.setLayoutY(300);
-                root.getChildren().add(currentStage);
-                countdown--;
-            } else {
-                if (idLevel == 0) {
-                    gameState = "Start";
-                }
-            }
-        } else if (gameState == "Start"){
+            return;
+        } else {
+            root.getChildren().remove(imageView);
+            root.getChildren().remove(msg);
+        }
+
+        if (gameState == "Start") {
             createMap();
             buildEntities();
             gameState = "continue";
+            return;
         }
-    }
 
-    public void render_update() {
-        System.err.println(gameState);
-        //if (gameState != "continue") {
-        //    return;
-        //}
+        if (gameState == "Load Stage") {
+            root.getChildren().remove(currentStage);
 
+            currentStage.setText("Stage " + String.valueOf(idLevel + 1));
+            currentStage.setFont(new Font(50));
+            currentStage.setLayoutX(440);
+            currentStage.setLayoutY(170);
+
+            root.getChildren().add(currentStage);
+
+            if (countdownStage == 0) {
+                if (idLevel == 0) {
+                    gameState = "Start";
+                } else {
+                    gameState = "continue";
+                }
+            }
+
+            if (countdownStage > 0) {
+                countdownStage--;
+            }
+
+            return;
+        } else {
+            root.getChildren().remove(currentStage);
+        }
+
+        if (gameState != "continue") {
+            return;
+        }
+
+        root.getChildren().remove(imageView);
+        root.getChildren().remove(currentStage);
         root.getChildren().remove(labelLife);
         root.getChildren().remove(labelStage);
-        // Tao text HP
-        String HP = String.valueOf(bomberLifeRemain);
-        labelLife.setFont(new Font(23));
-        labelLife.setText("Life : " + HP);
-        labelLife.setLayoutX(30);
-        labelLife.setLayoutY(415);
 
         // Tao text Level
         String level = String.valueOf(idLevel + 1);
         labelStage.setFont(new Font(23));
         labelStage.setText("Stage : " + level);
-        labelStage.setLayoutX(180);
+        labelStage.setLayoutX(30);
         labelStage.setLayoutY(415);
+        root.getChildren().add(labelStage);
 
-        root.getChildren().addAll(labelLife, labelStage);
+        // Tao text HP
+        String HP = String.valueOf(bomberLifeRemain);
+        labelLife.setFont(new Font(23));
+        labelLife.setText("Life : " + HP);
+        labelLife.setLayoutX(180);
+        labelLife.setLayoutY(415);
+        root.getChildren().add(labelLife);
 
-        if (bomberLifeRemain == 0) {
-            return;
-        }
+        // Tao text Monster Left
+        root.getChildren().remove(labelMonster);
+        String monsterRemain = String.valueOf(numberOfMonster);
+        labelMonster.setFont(new Font(23));
+        labelMonster.setText("Monster Left : " + monsterRemain);
+        labelMonster.setLayoutX(320);
+        labelMonster.setLayoutY(415);
+        root.getChildren().add(labelMonster);
 
         count++;
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());

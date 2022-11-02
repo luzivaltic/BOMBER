@@ -2,6 +2,7 @@ package entities;
 
 import javafx.scene.image.Image;
 import Bomber.Game;
+import static entities.Bomb.*;
 import static Bomber.Game.*;
 
 public class Portal extends Entity {
@@ -17,16 +18,21 @@ public class Portal extends Entity {
         }
     }
 
+
+
     @Override
     public void collideHandler(Entity entity) {
         if (entity instanceof Bomber) {
             if (this.isCollide(entity)) {
                 if (idLevel < limitLevel - 1) {
                     ++idLevel;
+                    resetBomber();
                     createMap();
                     buildEntities();
+                    gameState = "Load Stage";
+                    countdownStage = 50;
                 } else if (idLevel == limitLevel - 1) {
-                    gameState = "Game is over ! You are the winner !";
+                    gameState = "Game is over ! You win !";
                 }
             }
         }

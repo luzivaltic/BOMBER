@@ -13,8 +13,7 @@ import Bomber.Game;
 import static Bomber.Game.*;
 
 public class Bomber extends Entity {
-
-    public static int STEP_SIZE = 7;
+    public int STEP_SIZE = 7;
     public int dir;
     public boolean pressed = false;
     public boolean upPressed = false , downPressed = false , leftPressed = false , rightPressed = false , spacePressed = false;
@@ -106,7 +105,7 @@ public class Bomber extends Entity {
         }
 
         if( entity instanceof SpeedItem && this.isCollide(entity) ) {
-            Bomber.STEP_SIZE ++;
+            STEP_SIZE ++;
             Game.removeList.add(entity);
         }
 
@@ -157,13 +156,13 @@ public class Bomber extends Entity {
         else if( spriteCount == 2 ) img = Sprite.player_dead3.getFxImage();
 
         if( endAnimation < System.nanoTime() ) {
-            if (bomberLifeRemain > 1) {
+            if (bomberLifeRemain > 0) {
                 isDead = false;
                 x = Sprite.SCALED_SIZE;
                 y = Sprite.SCALED_SIZE;
                 img = Sprite.player_right.getFxImage();
             } else {
-                gameState = "Game is over ! You are the loser !";
+                gameState = "Game is over ! You lose !";
             }
             bomberLifeRemain--;
         }
