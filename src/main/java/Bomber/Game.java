@@ -205,11 +205,11 @@ public class Game extends Application {
                         case 'p':
                             bomber = new Bomber(j, i, Sprite.player_right.getFxImage());
                             break;
-                        case '1': numberOfMonster++; entities.add(new Balloom(j, i, Sprite.balloom_right1.getFxImage())); break;
-                        case '2': numberOfMonster++; entities.add(new Oneal(j, i, Sprite.oneal_right1.getFxImage())); break;
-                        case '3': numberOfMonster++; entities.add(new Minvo(j, i, Sprite.minvo_right1.getFxImage())); break;
-                        case '4': numberOfMonster++; entities.add(new Doll(j, i, Sprite.doll_right1.getFxImage())); break;
-                        case '5': numberOfMonster++; entities.add(new Kondoria(j, i, Sprite.kondoria_right1.getFxImage())); break;
+                        //case '1': numberOfMonster++; entities.add(new Balloom(j, i, Sprite.balloom_right1.getFxImage())); break;
+                        //case '2': numberOfMonster++; entities.add(new Oneal(j, i, Sprite.oneal_right1.getFxImage())); break;
+                        //case '3': numberOfMonster++; entities.add(new Minvo(j, i, Sprite.minvo_right1.getFxImage())); break;
+                        //case '4': numberOfMonster++; entities.add(new Doll(j, i, Sprite.doll_right1.getFxImage())); break;
+                        //case '5': numberOfMonster++; entities.add(new Kondoria(j, i, Sprite.kondoria_right1.getFxImage())); break;
                         case 'f': {
                             entities.add(new FlameItem(j, i, Sprite.powerup_flames.getFxImage()));
                             entities.add(new Brick(j, i, Sprite.brick.getFxImage()));
@@ -405,9 +405,10 @@ public class Game extends Application {
 
         count++;
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        stillObjects.forEach(g -> g.render(gc));
-
         try {
+            stillObjects.forEach(g -> g.render(gc));
+            stillObjects.forEach(Entity::update);
+
             entities.forEach(g -> g.render(gc));
             entities.forEach(Entity::update);
         } catch (Exception e) {};
