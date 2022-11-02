@@ -13,8 +13,7 @@ import Bomber.Game;
 import static Bomber.Game.*;
 
 public class Bomber extends Entity {
-
-    public static int STEP_SIZE = 7;
+    public int STEP_SIZE = 7;
     public int dir;
     public boolean pressed = false;
     public boolean upPressed = false , downPressed = false , leftPressed = false , rightPressed = false , spacePressed = false;
@@ -96,17 +95,13 @@ public class Bomber extends Entity {
             }
         }
 
-        if( entity instanceof Item ) {
-
-        }
-
         if( entity instanceof FlameItem && this.isCollide(entity) ) {
             Bomb.flameLength++;
             Game.removeList.add(entity);
         }
 
         if( entity instanceof SpeedItem && this.isCollide(entity) ) {
-            Bomber.STEP_SIZE ++;
+            STEP_SIZE ++;
             Game.removeList.add(entity);
         }
 

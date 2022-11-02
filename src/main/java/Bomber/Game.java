@@ -119,6 +119,7 @@ public class Game extends Application {
                     case DOWN :bomber.downPressed = true; break;
                     case RIGHT :bomber.rightPressed = true; break;
                     case LEFT : bomber.leftPressed = true; break;
+                    case M :
                 }
             }
         });
