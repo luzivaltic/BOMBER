@@ -135,14 +135,23 @@ public class Game extends Application {
                     case RIGHT : bomber.rightPressed = false; break;
                     case LEFT : bomber.leftPressed = false; break;
                     case SPACE :
-                        int bomber_block_x = ( bomber.x - 16 ) / 32 + 1;
-                        int bomber_block_y = ( bomber.y - 16 ) / 32 + 1;
-                        if( Bomb.bombCount < Bomb.bombCapacity ) {
-                            entities.add(new Bomb(bomber_block_x, bomber_block_y, Sprite.bomb.getFxImage()));
+                        if (gameState == "continue") {
+                            int bomber_block_x = (bomber.x - 16) / 32 + 1;
+                            int bomber_block_y = (bomber.y - 16) / 32 + 1;
+                            if (Bomb.bombCount < Bomb.bombCapacity) {
+                                boolean valid = true;
+                                for( Entity entity : entities ) {
+                                    if( entity instanceof Bomb &&
+                                            entity.x == bomber_block_x*32 && entity.y == bomber_block_y * 32 ) {
+                                        valid = false;
+                                    }
+                                }
+                                if( valid ) {
+                                    entities.add(new Bomb(bomber_block_x, bomber_block_y, Sprite.bomb.getFxImage()));
+                                }
+                            }
                         }
                         break;
-                    case P: if (gameState == "continue") gameState = "Pause"; break;
-                    case C: if (gameState == "Pause") gameState = "continue"; break;
                     case R: gameRestart(); break;
                     case Q: System.exit(1); break;
                 }
