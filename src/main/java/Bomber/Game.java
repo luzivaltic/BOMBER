@@ -228,7 +228,7 @@ public class Game extends Application {
                         case '#': stillObjects.add(new Wall(j, i, Sprite.wall.getFxImage())); break;
                         case '*': entities.add(new Brick(j, i, Sprite.brick.getFxImage())); break;
                         case 'x': {
-                            entities.add(new Portal(j, i, Sprite.portal.getFxImage()));
+                            stillObjects.add(new Portal(j, i, Sprite.portal.getFxImage()));
                             entities.add(new Brick(j, i, Sprite.brick.getFxImage()));
                             break;
                         }
