@@ -50,7 +50,7 @@ public class Game extends Application {
     public static int numberOfMonster = 0;
     public static int bomberLifeRemain = 5;
     public static String gameState = "Menu";
-    public static Bomber bomber;
+    public static Bomber bomber = new Bomber(1, 1, null);
     public static File bomb_bang , backgroundMusic , bomber_die , enemy_die, item ;
     public static int idLevel = 0;
     public static int limitLevel = 5;
@@ -134,14 +134,14 @@ public class Game extends Application {
                     case RIGHT : bomber.rightPressed = false; break;
                     case LEFT : bomber.leftPressed = false; break;
                     case SPACE :
-                        int bomber_block_x = ( bomber.x - 16 ) / 32 + 1;
-                        int bomber_block_y = ( bomber.y - 16 ) / 32 + 1;
-                        if( Bomb.bombCount < Bomb.bombCapacity ) {
-                            entities.add(new Bomb(bomber_block_x, bomber_block_y, Sprite.bomb.getFxImage()));
+                        if (gameState == "continue") {
+                            int bomber_block_x = (bomber.x - 16) / 32 + 1;
+                            int bomber_block_y = (bomber.y - 16) / 32 + 1;
+                            if (Bomb.bombCount < Bomb.bombCapacity) {
+                                entities.add(new Bomb(bomber_block_x, bomber_block_y, Sprite.bomb.getFxImage()));
+                            }
                         }
                         break;
-                    case P: if (gameState == "continue") gameState = "Pause"; break;
-                    case C: if (gameState == "Pause") gameState = "continue"; break;
                     case R: gameRestart(); break;
                     case Q: System.exit(1); break;
                 }
