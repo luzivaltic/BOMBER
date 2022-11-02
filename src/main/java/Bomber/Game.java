@@ -50,7 +50,7 @@ public class Game extends Application {
     public static int numberOfMonster = 0;
     public static int bomberLifeRemain = 5;
     public static String gameState = "Menu";
-    public static Bomber bomber;
+    public static Bomber bomber = new Bomber(1 , 1 , null);
     public static File bomb_bang , backgroundMusic , bomber_die , enemy_die, item ;
     public static int idLevel = 0;
     public static int limitLevel = 5;
@@ -103,24 +103,11 @@ public class Game extends Application {
         stage.setTitle("BomberMan");
 
         bomb_bang = new File("bomb_bang.wav");
-        backgroundMusic = new File("rise.mp4");
+        backgroundMusic = new File("bgm.mp3");
         bomber_die = new File("bomber_die.wav");
         enemy_die = new File("enemy_die.wav");
         item = new File("item.wav");
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent keyEvent) {
-                switch ( keyEvent.getCode() ) {
-                    case UP :bomber.upPressed = true ; break;
-                    case DOWN :bomber.downPressed = true; break;
-                    case RIGHT :bomber.rightPressed = true; break;
-                    case LEFT : bomber.leftPressed = true; break;
-                    case M :
-                }
-            }
-        });
-
-        scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent keyEvent) {
                 if (keyEvent.getCode() != null) {
@@ -129,6 +116,19 @@ public class Game extends Application {
                         countdownStage = 50;
                     }
                 }
+                switch ( keyEvent.getCode() ) {
+                    case UP :bomber.upPressed = true ; break;
+                    case DOWN :bomber.downPressed = true; break;
+                    case RIGHT :bomber.rightPressed = true; break;
+                    case LEFT : bomber.leftPressed = true; break;
+                    case M : break;
+                }
+            }
+        });
+
+        scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
                 switch ( keyEvent.getCode() ) {
                     case UP : bomber.upPressed = false ; break;
                     case DOWN : bomber.downPressed = false; break;
@@ -169,6 +169,7 @@ public class Game extends Application {
         bomber = new Bomber(1, 1, null);
         Bomb.bombCapacity = 2;
         Bomb.flameLength = 1;
+        Bomb.bombCount = 0;
     }
 
     public void gameRestart() {
